@@ -1,0 +1,6 @@
+-- Migration 011: Module 10 — Connected Apps (Integration Hub)
+-- No new tables here — the `connectors` table this module manages was
+-- already created in 001_shared_foundations.sql, since core/connectorLayer.js
+-- (used by every module that talks to a third party) needed it from the
+-- start. This file exists as a placeholder so the migration numbering
+-- stays in sync with the module numbering (Ch.4) — nothing to run.
