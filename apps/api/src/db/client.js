@@ -11,7 +11,7 @@ if (!process.env.SUPABASE_URL) {
 const db = knex({
   client: 'pg',
   connection: {
-    connectionString: process.env.DATABASE_URL, // Supabase project's Postgres connection string
+    connectionString: process.env.DIRECT_URL || process.env.DATABASE_URL, // Supabase project's Postgres connection string
     ssl: { rejectUnauthorized: false }
   },
   pool: { min: 0, max: 10 }

@@ -11,7 +11,7 @@ export default function BlueprintPage({ blueprintId }) {
   const [blueprint, setBlueprint] = useState(null);
 
   const load = () => getBlueprint(blueprintId).then(setBlueprint).catch(() => {});
-  useEffect(load, [blueprintId]);
+  useEffect(() => { load(); }, [blueprintId]);
 
   if (!blueprint) return <div className="w-full px-4 py-6 animate-pulse h-40 bg-gray-200 rounded" />;
 
@@ -24,7 +24,7 @@ export default function BlueprintPage({ blueprintId }) {
 
       <h2 className="text-sm font-semibold mb-2">Notes</h2>
       <ul className="text-sm text-gray-700 space-y-1 mb-4">
-        {blueprint.notes.map(n => <li key={n.id}>{n.note_text}</li>)}
+        {(blueprint.notes || []).map(n => <li key={n.id}>{n.note_text}</li>)}
       </ul>
 
       {blueprint.status !== 'ready' && blueprint.status !== 'delivered' && (
