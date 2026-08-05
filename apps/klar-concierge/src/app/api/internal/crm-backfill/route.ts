@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
+import { timingSafeEqual } from "node:crypto";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { config } from "@/lib/config";
-import { requireRole } from "@/lib/auth/session";
 import { createCRMProvider } from "@/services/crm/factory";
 import { audit } from "@/lib/audit";
 
@@ -13,15 +13,20 @@ const bodySchema = z.object({
   batchSize: z.number().int().min(1).max(100).default(25),
 });
 
+function secretMatches(request: Request): boolean {
+  const provided = request.headers.get("x-crm-retry-secret") ?? "";
+  const expected = config.crmRetrySecret;
+  if (!expected || provided.length !== expected.length) return false;
+  return timingSafeEqual(Buffer.from(provided), Buffer.from(expected));
+}
+
 /**
  * Backfill workflow: when a real CRM is connected later, deliver historical
  * leads that were stored while CRM was disabled. Idempotent, batched,
- * dry-run by default. Disabled scaffolding while CRM_ENABLED=false.
+ * dry-run by default. Requires the CRM_RETRY_SECRET header once CRM is
+ * enabled. Disabled scaffolding while CRM_ENABLED=false.
  */
 export async function POST(request: Request) {
-  const user = await requireRole("admin");
-  if (!user) return NextResponse.json({ error: "Unauthorised." }, { status: 401 });
-
   if (!config.crmEnabled) {
     return NextResponse.json({
       ok: true,
@@ -29,6 +34,10 @@ export async function POST(request: Request) {
       message:
         "CRM is disabled. Enable and configure a real provider before running the backfill.",
     });
+  }
+
+  if (!secretMatches(request)) {
+    return NextResponse.json({ error: "Unauthorised." }, { status: 401 });
   }
 
   let parsed: z.infer<typeof bodySchema>;
@@ -97,7 +106,7 @@ export async function POST(request: Request) {
     else failed++;
   }
 
-  await audit(user.id, "crm.backfill", "system", undefined, {
+  await audit("portal", "crm.backfill", "system", undefined, {
     processed: candidates.length, succeeded, failed,
   });
 

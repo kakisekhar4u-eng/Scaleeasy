@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
-import { requireRole } from "@/lib/auth/session";
 import { getDb } from "@/lib/db";
 
 export const runtime = "nodejs";
 
+// No app-level auth: this API is reached only through the klartravels portal,
+// which is responsible for access control to /consultant and /api/consultant.
 export async function GET() {
-  const user = await requireRole("consultant");
-  if (!user) return NextResponse.json({ error: "Unauthorised." }, { status: 401 });
-
   const leads = await getDb().lead.findMany({
     orderBy: { createdAt: "desc" },
     take: 100,
@@ -20,7 +18,7 @@ export async function GET() {
       priority: true,
       leadScore: true,
       crmStatus: true,
-      consultantOwnerId: true,
+      consultantOwner: true,
       createdAt: true,
       updatedAt: true,
     },

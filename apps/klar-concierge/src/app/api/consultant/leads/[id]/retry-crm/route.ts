@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { requireRole } from "@/lib/auth/session";
 import { getDb } from "@/lib/db";
 import { config } from "@/lib/config";
 import { createCRMProvider, nextRetryAt } from "@/services/crm/factory";
@@ -11,9 +10,6 @@ export async function POST(
   _request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const user = await requireRole("consultant");
-  if (!user) return NextResponse.json({ error: "Unauthorised." }, { status: 401 });
-
   if (!config.crmEnabled) {
     return NextResponse.json({
       ok: false,
@@ -67,7 +63,7 @@ export async function POST(
         crmNextRetryAt: result.success ? null : retryAt,
       },
     });
-    await audit(user.id, "crm.retry", "lead", lead.id, { success: result.success });
+    await audit("portal", "crm.retry", "lead", lead.id, { success: result.success });
 
     return NextResponse.json({
       ok: result.success,

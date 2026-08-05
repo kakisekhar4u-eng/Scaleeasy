@@ -28,13 +28,12 @@
 - [x] CRM-disabled mode passes readiness; placeholder never fakes success
 - [x] Analytics events exclude all personal data (allow-list + key filter)
 - [x] Audit records mask email/phone
-- [x] `/admin/*`, `/consultant/*` and internal APIs role-protected
-- [x] Rate limits on chat, plan, leads, login
+- [x] Rate limits on chat, plan, leads
+- [ ] Portal/reverse-proxy restricts `/consultant`, `/admin` and internal APIs (no app login by design)
 
 ## Before public launch (operational)
 - [ ] Klar team verifies ≥10 destinations in `/admin/knowledge`
-- [ ] Production `AUTH_SECRET` set (≥32 chars); `ENABLE_AUTH_BYPASS=false`
-- [ ] `SEED_ADMIN_*` rotated after first login
+- [ ] Portal access rules for internal routes confirmed in production
 - [ ] Error monitoring (e.g. Sentry) wired into the Vercel project
 - [ ] Privacy/terms copy reviewed by Klar
 - [ ] Real-device mobile pass completed

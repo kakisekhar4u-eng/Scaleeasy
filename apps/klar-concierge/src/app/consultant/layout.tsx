@@ -1,15 +1,14 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { requireRole } from "@/lib/auth/session";
 import { KlarLogo } from "@/components/brand/KlarLogo";
-import { LogoutButton } from "@/components/internal/LogoutButton";
 
 export const dynamic = "force-dynamic";
 
-export default async function ConsultantLayout({ children }: { children: React.ReactNode }) {
-  const user = await requireRole("consultant");
-  if (!user) redirect("/login?next=/consultant");
-
+/**
+ * The consultant workspace ships without its own authentication — it is
+ * designed to sit inside the klartravels portal, which controls who can
+ * reach these URLs. Protect this path at the portal / reverse-proxy level.
+ */
+export default function ConsultantLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen">
       <header className="border-b border-line bg-surface">
@@ -20,10 +19,7 @@ export default async function ConsultantLayout({ children }: { children: React.R
             </Link>
             <span className="text-sm font-semibold text-brand">Consultant Workspace</span>
           </div>
-          <div className="flex items-center gap-3 text-sm text-foreground/60">
-            <span>{user.name}</span>
-            <LogoutButton />
-          </div>
+          <Link href="/" className="btn-quiet text-sm">View public site</Link>
         </div>
       </header>
       <main className="mx-auto max-w-content px-4 py-8 sm:px-6">{children}</main>

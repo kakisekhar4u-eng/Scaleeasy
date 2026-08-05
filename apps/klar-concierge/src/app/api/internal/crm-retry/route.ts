@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { timingSafeEqual } from "node:crypto";
 import { getDb } from "@/lib/db";
 import { config } from "@/lib/config";
-import { requireRole } from "@/lib/auth/session";
 import { createCRMProvider, nextRetryAt, CRM_RETRY_SCHEDULE_MINUTES } from "@/services/crm/factory";
 import { audit } from "@/lib/audit";
 
@@ -19,7 +18,7 @@ function secretMatches(request: Request): boolean {
 
 /**
  * Durable retry worker for failed CRM deliveries. Disabled response when CRM
- * is off. Authenticate with the retry secret header or an admin session.
+ * is off. Requires the CRM_RETRY_SECRET header (set it before enabling CRM).
  * Wire to Vercel Cron when CRM is enabled (see vercel.json example).
  */
 export async function POST(request: Request) {
@@ -32,8 +31,7 @@ export async function POST(request: Request) {
   }
 
   if (!secretMatches(request)) {
-    const user = await requireRole("admin");
-    if (!user) return NextResponse.json({ error: "Unauthorised." }, { status: 401 });
+    return NextResponse.json({ error: "Unauthorised." }, { status: 401 });
   }
 
   const db = getDb();

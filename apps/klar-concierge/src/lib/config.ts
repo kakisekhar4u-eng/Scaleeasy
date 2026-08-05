@@ -14,11 +14,6 @@ export const config = {
 
   databaseUrl: process.env.DATABASE_URL ?? "",
 
-  authSecret: process.env.AUTH_SECRET ?? "",
-  authCookieName: process.env.AUTH_COOKIE_NAME ?? "klar_session",
-  authSessionHours: int(process.env.AUTH_SESSION_HOURS, 12),
-  enableAuthBypass: bool(process.env.ENABLE_AUTH_BYPASS, false),
-
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
   openaiModel: process.env.OPENAI_MODEL ?? "gpt-5-mini",
   enableAIPersonalisation: bool(process.env.ENABLE_AI_PERSONALISATION, true),
@@ -37,7 +32,6 @@ export const config = {
 
   rateLimitChatPerMinute: int(process.env.RATE_LIMIT_CHAT_PER_MINUTE, 20),
   rateLimitLeadsPerMinute: int(process.env.RATE_LIMIT_LEADS_PER_MINUTE, 5),
-  rateLimitLoginPerMinute: int(process.env.RATE_LIMIT_LOGIN_PER_MINUTE, 5),
 
   logLevel: process.env.LOG_LEVEL ?? "info",
 };

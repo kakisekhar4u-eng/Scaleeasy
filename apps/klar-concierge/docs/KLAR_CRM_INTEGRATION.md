@@ -36,10 +36,10 @@ CRM-specific readiness check fails without failing the product.
 
 ## Endpoints
 
-- `POST /api/internal/crm-retry` — batch retry worker (secret header `x-crm-retry-secret`
-  or admin session). Returns a disabled response while `CRM_ENABLED=false`.
+- `POST /api/internal/crm-retry` — batch retry worker (requires the
+  `x-crm-retry-secret` header). Returns a disabled response while `CRM_ENABLED=false`.
   Vercel Cron example (disabled by default) is in `vercel.json`.
-- `POST /api/internal/crm-backfill` — admin-only, dry-run by default; delivers
+- `POST /api/internal/crm-backfill` — secret-protected, dry-run by default; delivers
   historical `disabled` leads in idempotent batches once a real provider exists.
 - `POST /api/consultant/leads/:id/retry-crm` — single-lead retry from the workspace.
 

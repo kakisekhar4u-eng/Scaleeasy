@@ -8,7 +8,6 @@
    `npm run build` (runs `prisma generate` first — see `vercel.json`).
 3. **Environment variables** (Production + Preview):
    - `DATABASE_URL`
-   - `AUTH_SECRET` (≥32 random chars), `ENABLE_AUTH_BYPASS=false`
    - `NEXT_PUBLIC_APP_URL=https://<your-domain>`
    - `CRM_ENABLED=false`, `CRM_PROVIDER=placeholder`
    - optional: `OPENAI_API_KEY`, `OPENAI_MODEL`
@@ -16,9 +15,13 @@
    ```bash
    cd apps/klar-concierge
    DATABASE_URL=… npx prisma migrate deploy
-   DATABASE_URL=… SEED_ADMIN_EMAIL=… SEED_ADMIN_PASSWORD=… npm run db:seed
+   DATABASE_URL=… npm run db:seed
    ```
-5. Deploy, sign in at `/login`, open `/admin/readiness`.
+5. **Protect internal routes.** There is no app login: restrict `/consultant`,
+   `/admin`, `/api/consultant/*`, `/api/admin/*`, `/api/audit` and
+   `/api/system/readiness` at the klartravels portal / reverse proxy
+   (e.g. Vercel protection, portal session check, or IP allow-list).
+6. Deploy and open `/admin/readiness`.
 
 ## Suggested domain layout
 

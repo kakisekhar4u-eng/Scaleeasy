@@ -1,8 +1,5 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { requireRole } from "@/lib/auth/session";
 import { KlarLogo } from "@/components/brand/KlarLogo";
-import { LogoutButton } from "@/components/internal/LogoutButton";
 
 export const dynamic = "force-dynamic";
 
@@ -15,10 +12,12 @@ const NAV = [
   { href: "/admin/audit", label: "Audit" },
 ];
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const user = await requireRole("admin");
-  if (!user) redirect("/login?next=/admin");
-
+/**
+ * The admin area ships without its own authentication — it is designed to sit
+ * inside the klartravels portal, which controls who can reach these URLs.
+ * Protect this path at the portal / reverse-proxy level.
+ */
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen">
       <header className="border-b border-line bg-surface">
@@ -29,10 +28,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </Link>
             <span className="text-sm font-semibold text-brand">Admin</span>
           </div>
-          <div className="flex items-center gap-3 text-sm text-foreground/60">
-            <span>{user.name}</span>
-            <LogoutButton />
-          </div>
+          <Link href="/" className="btn-quiet text-sm">View public site</Link>
         </div>
         <nav aria-label="Admin" className="mx-auto flex max-w-content gap-1 overflow-x-auto px-4 pb-2 sm:px-6">
           {NAV.map((item) => (

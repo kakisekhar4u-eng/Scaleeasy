@@ -18,23 +18,21 @@ const STAGES = [
 export function LeadActions({
   leadId,
   currentStage,
-  currentOwnerId,
+  currentOwner,
   followUpDueAt,
-  consultants,
   crmStatus,
   copyText,
 }: {
   leadId: string;
   currentStage: string;
-  currentOwnerId: string | null;
+  currentOwner: string;
   followUpDueAt: string;
-  consultants: Array<{ id: string; name: string }>;
   crmStatus: string;
   copyText: string;
 }) {
   const router = useRouter();
   const [stage, setStage] = useState(currentStage);
-  const [ownerId, setOwnerId] = useState(currentOwnerId ?? "");
+  const [owner, setOwner] = useState(currentOwner);
   const [followUp, setFollowUp] = useState(followUpDueAt);
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
@@ -120,18 +118,14 @@ export function LeadActions({
 
         <div>
           <label htmlFor="act-owner" className="field-label">Assign consultant</label>
-          <select
+          <input
             id="act-owner"
             className="field-input"
-            value={ownerId}
-            onChange={(e) => setOwnerId(e.target.value)}
-          >
-            <option value="">Unassigned</option>
-            {consultants.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
-          </select>
-          <button type="button" className="btn-secondary mt-2 w-full" disabled={busy} onClick={() => void patch({ consultantOwnerId: ownerId || null })}>
+            value={owner}
+            onChange={(e) => setOwner(e.target.value)}
+            placeholder="Consultant name"
+          />
+          <button type="button" className="btn-secondary mt-2 w-full" disabled={busy} onClick={() => void patch({ consultantOwner: owner.trim() || null })}>
             Assign
           </button>
         </div>

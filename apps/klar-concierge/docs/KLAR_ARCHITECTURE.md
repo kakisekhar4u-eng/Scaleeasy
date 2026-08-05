@@ -8,7 +8,7 @@ Planner (client component state machine)
       ↓  /api/plan            → KTIE scoring → three directions / itinerary composer
       ↓  /api/leads           → durable lead store (PostgreSQL) → CRM provider (placeholder)
       ↓
-Consultant workspace + Admin (role-protected server components)
+Consultant workspace + Admin (access controlled by the klartravels portal)
 ```
 
 ## Layers
@@ -28,8 +28,8 @@ Consultant workspace + Admin (role-protected server components)
   silently fall back when CRM is enabled, retry schedule (0/5/30/120/720 min).
 - `src/services/leads/` — reference generation (unambiguous alphabet), lead scoring.
 - `src/services/readiness/` — Phase 1 readiness checks (env, DB, KTIE thresholds, CRM mode).
-- `src/lib/` — config, Prisma client, auth (scrypt passwords, hashed DB session tokens,
-  HTTP-only cookies), rate limiting, audit (masked PII), analytics (allow-listed events).
+- `src/lib/` — config, Prisma client, rate limiting, audit (masked PII), analytics
+  (allow-listed events).
 
 ## Durable lead sequence
 
@@ -44,8 +44,10 @@ a retry is scheduled, and the consultant workspace shows the state.
 
 ## Security
 
-Zod validation everywhere, fixed-window rate limits on chat/plan/leads/login, HTTP-only
-Secure SameSite cookies, server-side role guards on `/admin/*` and `/consultant/*` (+ all
-internal APIs), CSP and frame-deny headers, masked audit logs, ORM-only SQL access,
-no secrets in the browser. The in-memory rate limiter is per-instance — swap for a
-shared store (e.g. Upstash) before horizontal scaling.
+Zod validation everywhere, fixed-window rate limits on chat/plan/leads, CSP and
+frame-deny headers, masked audit logs, ORM-only SQL access, no secrets in the browser.
+There is **no app-level login by design**: the app sits inside the klartravels portal,
+which must restrict `/consultant`, `/admin` and their APIs to Klar staff. The internal
+CRM retry/backfill endpoints require the `CRM_RETRY_SECRET` header once CRM is enabled.
+The in-memory rate limiter is per-instance — swap for a shared store (e.g. Upstash)
+before horizontal scaling.

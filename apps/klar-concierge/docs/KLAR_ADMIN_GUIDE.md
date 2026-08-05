@@ -1,7 +1,6 @@
 # Klar Concierge — Admin Guide
 
-Sign in at `/login`. Admin areas require the `admin`, `knowledge_editor` or
-`operations` role.
+No app-level sign-in: access to this area is controlled by the klartravels portal.
 
 ## Overview (`/admin`)
 Live counts: leads, verified/reviewed destinations, CRM failures, analytics volume.
@@ -24,7 +23,7 @@ are never entered or shown in the browser. "Test connection" stays unavailable w
 the placeholder provider is active.
 
 ## Readiness (`/admin/readiness`)
-Live Phase 1 checklist: auth secret strength, bypass off, database reachable and
+Live Phase 1 checklist: portal protection reminder, database reachable and
 migrated, 20 destinations seeded, ≥10 verified, CRM mode valid, AI/fallback, analytics.
 The product is launch-ready only when every required check passes. It never fails
 because booking/payments are absent — those are out of scope by design.
@@ -33,6 +32,6 @@ because booking/payments are absent — those are out of scope by design.
 Recent internal actions (logins, lead assignment, stage changes, notes, CRM attempts,
 knowledge edits/verifications, readiness checks). Emails/phones are masked at write time.
 
-## User management
-Users are database rows (`User`). Seed the first admin via `SEED_ADMIN_EMAIL`/
-`SEED_ADMIN_PASSWORD` + `npm run db:seed`. Add consultants with role `consultant`.
+## Access
+Klar Concierge ships without its own login — the klartravels portal must restrict
+`/admin` and its APIs to Klar staff (reverse proxy, portal session or hosting rule).

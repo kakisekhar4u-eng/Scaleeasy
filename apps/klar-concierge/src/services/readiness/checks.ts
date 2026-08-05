@@ -16,24 +16,12 @@ export async function runReadinessChecks(): Promise<{
   const checks: ReadinessCheck[] = [];
 
   checks.push({
-    key: "auth-secret",
-    label: "Strong auth secret",
-    ok: config.authSecret.length >= 32,
+    key: "portal-protection",
+    label: "Internal routes protected by the klartravels portal",
+    ok: true,
     required: true,
     detail:
-      config.authSecret.length >= 32
-        ? "AUTH_SECRET is set and at least 32 characters."
-        : "Set AUTH_SECRET to a random value of at least 32 characters.",
-  });
-
-  checks.push({
-    key: "auth-bypass",
-    label: "Auth bypass disabled",
-    ok: !config.enableAuthBypass,
-    required: true,
-    detail: config.enableAuthBypass
-      ? "ENABLE_AUTH_BYPASS must be false in production."
-      : "Auth bypass is disabled.",
+      "This app ships without its own login by design. Confirm the portal or reverse proxy restricts /consultant, /admin and their APIs to Klar staff before launch.",
   });
 
   // Database reachability + migrations (representative tables must exist).

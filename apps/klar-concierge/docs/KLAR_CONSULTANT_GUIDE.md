@@ -1,6 +1,6 @@
 # Klar Concierge — Consultant Guide
 
-Sign in at `/login` (roles: consultant, admin, operations).
+No app-level sign-in: access to this area is controlled by the klartravels portal.
 
 ## Dashboard (`/consultant`)
 Counters (new, high priority, CRM failures, follow-ups due, converted, lost) and the
@@ -21,7 +21,7 @@ Everything the customer built, in one place:
 - **Update stage** — new-enquiry → consultant-assigned → contact-attempted →
   requirement-confirmed → quote-in-preparation → quote-sent → follow-up →
   converted / lost
-- **Assign** a consultant, **set follow-up date**, **add notes**
+- **Assign** a consultant by name, **set follow-up date**, **add notes**
 - **Mark converted / lost**
 - **Retry CRM delivery** (only shown for failed deliveries; hidden in Phase 1
   disabled mode)

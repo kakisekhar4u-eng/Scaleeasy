@@ -1,13 +1,11 @@
 /**
  * Seed script: 20 KTIE destinations (status "reviewed" — Klar must verify
- * before launch) and an initial admin user from SEED_ADMIN_EMAIL /
- * SEED_ADMIN_PASSWORD. No hard-coded credentials.
+ * before launch).
  *
  * Run with: npm run db:seed
  */
 import { PrismaClient } from "../src/generated/prisma";
 import { KTIE_DESTINATIONS } from "../src/services/ktie/data";
-import { hashPassword } from "../src/lib/auth/password";
 
 const prisma = new PrismaClient();
 
@@ -68,24 +66,6 @@ async function main() {
       })),
     });
     console.log(`Seeded destination: ${d.name}`);
-  }
-
-  const adminEmail = process.env.SEED_ADMIN_EMAIL;
-  const adminPassword = process.env.SEED_ADMIN_PASSWORD;
-  if (adminEmail && adminPassword) {
-    await prisma.user.upsert({
-      where: { email: adminEmail },
-      update: {},
-      create: {
-        email: adminEmail,
-        name: "Klar Admin",
-        passwordHash: hashPassword(adminPassword),
-        role: "admin",
-      },
-    });
-    console.log(`Seeded admin user: ${adminEmail}`);
-  } else {
-    console.log("SEED_ADMIN_EMAIL / SEED_ADMIN_PASSWORD not set — skipping admin user.");
   }
 }
 

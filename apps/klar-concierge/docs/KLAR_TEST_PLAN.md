@@ -29,7 +29,7 @@
 Family with two children · honeymoon couple · senior travellers · undecided customer ·
 December holiday · four-night short trip · accessibility requirement · food-led
 holiday · CRM temporary failure (enabled mode) · duplicate lead submission (same
-Idempotency-Key returns the original reference) · session expiry → `/login` ·
+Idempotency-Key returns the original reference) · portal access rules for internal routes ·
 mobile lead completion at 320–430 px.
 
 ## Not yet automated

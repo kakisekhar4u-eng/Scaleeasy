@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireRole } from "@/lib/auth/session";
 import { getDb } from "@/lib/db";
 import { audit } from "@/lib/audit";
 
@@ -17,9 +16,6 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ slug: string }> },
 ) {
-  const user = await requireRole("admin");
-  if (!user) return NextResponse.json({ error: "Unauthorised." }, { status: 401 });
-
   const { slug } = await params;
   const destination = await getDb().destination.findUnique({
     where: { slug },
@@ -33,9 +29,6 @@ export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ slug: string }> },
 ) {
-  const user = await requireRole("admin");
-  if (!user) return NextResponse.json({ error: "Unauthorised." }, { status: 401 });
-
   const { slug } = await params;
   let parsed: z.infer<typeof patchSchema>;
   try {
@@ -66,7 +59,7 @@ export async function PATCH(
   });
 
   await audit(
-    user.id,
+    "portal",
     parsed.status === "verified" ? "knowledge.verified" : "knowledge.edited",
     "destination",
     slug,

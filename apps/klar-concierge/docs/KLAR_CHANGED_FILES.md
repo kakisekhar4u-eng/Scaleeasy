@@ -32,20 +32,18 @@ All changes are additive. New workspace: `apps/klar-concierge/`.
 - `services/readiness/checks.ts`
 
 ## Libraries (src/lib)
-- `config.ts`, `db.ts`, `enums.ts`, `rateLimit.ts`, `audit.ts`, `analytics.ts`,
-  `auth/{password,session}.ts`
+- `config.ts`, `db.ts`, `enums.ts`, `rateLimit.ts`, `audit.ts`, `analytics.ts`
 
 ## App Router (src/app)
 - Public: `layout.tsx`, `globals.css`, `(public)/{layout,page}.tsx`,
   `(public)/concierge/{page,discover/page,how-it-works/page}.tsx`,
-  `(public)/{privacy,terms}/page.tsx`, `login/page.tsx`, `not-found.tsx`,
-  `robots.ts`, `sitemap.ts`
+  `(public)/{privacy,terms}/page.tsx`, `not-found.tsx`, `robots.ts`, `sitemap.ts`
 - Consultant: `consultant/{layout,page}.tsx`, `consultant/leads/[id]/page.tsx`
 - Admin: `admin/{layout,page}.tsx`, `admin/knowledge/page.tsx`,
   `admin/knowledge/destinations/{page,[slug]/page}.tsx`,
   `admin/{analytics,readiness,audit}/page.tsx`, `admin/integrations/crm/page.tsx`
 - APIs: `api/{chat,plan,discover,analytics,leads,audit}/route.ts`,
-  `api/leads/reference/[reference]/route.ts`, `api/auth/{login,logout,session}/route.ts`,
+  `api/leads/reference/[reference]/route.ts`,
   `api/consultant/leads/{route.ts,[id]/route.ts,[id]/notes/route.ts,[id]/retry-crm/route.ts}`,
   `api/admin/destinations/{route.ts,[slug]/route.ts}`,
   `api/internal/{crm-retry,crm-backfill}/route.ts`, `api/system/readiness/route.ts`
@@ -53,7 +51,7 @@ All changes are additive. New workspace: `apps/klar-concierge/`.
 ## Components (src/components)
 - `brand/KlarLogo.tsx`, `layout/{Header,Footer}.tsx`
 - `planner/{Planner,BriefReview,RecommendationCards,ItineraryView,LeadForm,SuccessView}.tsx`
-- `internal/{LogoutButton,LeadActions,DestinationReview}.tsx`
+- `internal/{LeadActions,DestinationReview}.tsx`
 
 ## Tests
 - `tests/{fallbackExtractor,scoring,itinerary,leads,crm,ktie}.test.ts` — 38 tests

@@ -20,17 +20,11 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
     where: { id },
     include: {
       recommendations: true,
-      notes: { orderBy: { createdAt: "desc" }, include: { author: { select: { name: true } } } },
+      notes: { orderBy: { createdAt: "desc" } },
       crmDeliveries: { orderBy: { createdAt: "desc" } },
     },
   });
   if (!lead) notFound();
-
-  const consultants = await db.user.findMany({
-    where: { role: { in: ["consultant", "admin", "operations"] }, active: true },
-    select: { id: true, name: true },
-    orderBy: { name: "asc" },
-  });
 
   const brief = lead.tripBrief as unknown as TravelBrief;
   const itinerary = lead.itinerary as unknown as ItineraryDay[];
@@ -146,9 +140,8 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
           <LeadActions
             leadId={lead.id}
             currentStage={stageFromDb(lead.stage)}
-            currentOwnerId={lead.consultantOwnerId}
+            currentOwner={lead.consultantOwner ?? ""}
             followUpDueAt={lead.followUpDueAt?.toISOString().slice(0, 10) ?? ""}
-            consultants={consultants}
             crmStatus={lead.crmStatus.replace(/_/g, "-")}
             copyText={buildCopySummary(lead.reference, lead.customerName, lead.customerPhone, lead.customerEmail, brief, lead.selectedDestinationSlug)}
           />
@@ -187,7 +180,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
                   <li key={n.id} className="rounded-lg bg-surface-muted p-3">
                     <p>{n.body}</p>
                     <p className="mt-1 text-xs text-foreground/50">
-                      {n.author.name} · {n.createdAt.toISOString().slice(0, 16).replace("T", " ")}
+                      {n.authorName} · {n.createdAt.toISOString().slice(0, 16).replace("T", " ")}
                     </p>
                   </li>
                 ))}

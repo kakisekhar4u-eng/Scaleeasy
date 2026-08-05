@@ -30,16 +30,25 @@ experience for Klar Travels, built as `apps/klar-concierge` in the Scaleeasy mon
   duplicate-safe, PostgreSQL-first, CRM afterwards; Klar references (KLAR-YYYY-XXXXXX).
 - CRM/RMS deferred by design: explicit placeholder provider, webhook provider +
   factory + retry schedule + backfill scaffolding ready for a future vendor.
-- Consultant workspace: dashboard, full lead detail, stages, assignment, notes,
-  follow-ups, converted/lost, CRM retry, copy-summary.
+- Consultant workspace: dashboard, full lead detail, stages, assignment (by name),
+  notes, follow-ups, converted/lost, CRM retry, copy-summary.
 - Admin: KTIE review/verification workflow, anonymous funnel analytics, CRM status
   page, live Phase 1 readiness checks, masked audit log.
-- Security: scrypt passwords, hashed DB-backed sessions, HTTP-only Secure cookies,
-  role guards, rate limits, CSP/frame headers, masked logs.
+- Security: Zod validation, rate limits, CSP/frame headers, masked logs, secret-header
+  protection on internal CRM endpoints. **No app-level login by design** — the app sits
+  inside the klartravels portal, which controls access to internal areas.
 
 ### Quality
 - 38 Vitest unit tests passing; strict TypeScript; production build verified;
   API smoke test of the full planning flow.
+
+### 0.1.1 — Portal mode (2026-08-05)
+
+- Removed the built-in authentication layer (login page, sessions, roles, user
+  accounts). Klar Concierge now assumes it sits inside the klartravels portal,
+  which must restrict `/consultant`, `/admin` and their APIs to Klar staff.
+- Consultant assignment and note authorship use plain names instead of accounts.
+- Internal CRM retry/backfill endpoints authenticate with `CRM_RETRY_SECRET`.
 
 ### Known limitations
 - Playwright e2e suite not yet added (manual QA checklist provided).

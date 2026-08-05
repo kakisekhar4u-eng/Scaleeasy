@@ -26,7 +26,7 @@ export default async function ConsultantDashboard() {
           priority: true,
           leadScore: true,
           crmStatus: true,
-          consultantOwnerId: true,
+          consultantOwner: true,
           followUpDueAt: true,
           updatedAt: true,
         },
@@ -76,6 +76,7 @@ export default async function ConsultantDashboard() {
                 <th className="px-4 py-3">Stage</th>
                 <th className="px-4 py-3">Priority</th>
                 <th className="px-4 py-3">Score</th>
+                <th className="px-4 py-3">Owner</th>
                 <th className="px-4 py-3">CRM</th>
                 <th className="px-4 py-3">Updated</th>
               </tr>
@@ -99,6 +100,7 @@ export default async function ConsultantDashboard() {
                     </td>
                     <td className="px-4 py-3">{lead.priority}</td>
                     <td className="px-4 py-3">{lead.leadScore}</td>
+                    <td className="px-4 py-3 text-xs">{lead.consultantOwner ?? "—"}</td>
                     <td className="px-4 py-3 text-xs">{lead.crmStatus.replace(/_/g, " ")}</td>
                     <td className="px-4 py-3 text-xs text-foreground/55">
                       {lead.updatedAt.toISOString().slice(0, 10)}

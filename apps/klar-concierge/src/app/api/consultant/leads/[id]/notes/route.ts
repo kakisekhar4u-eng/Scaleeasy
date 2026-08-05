@@ -1,20 +1,19 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { requireRole } from "@/lib/auth/session";
 import { getDb } from "@/lib/db";
 import { audit } from "@/lib/audit";
 
 export const runtime = "nodejs";
 
-const bodySchema = z.object({ body: z.string().min(1).max(4000) });
+const bodySchema = z.object({
+  body: z.string().min(1).max(4000),
+  authorName: z.string().max(120).optional(),
+});
 
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const user = await requireRole("consultant");
-  if (!user) return NextResponse.json({ error: "Unauthorised." }, { status: 401 });
-
   const { id } = await params;
   let parsed: z.infer<typeof bodySchema>;
   try {
@@ -28,9 +27,9 @@ export async function POST(
   if (!lead) return NextResponse.json({ error: "Not found." }, { status: 404 });
 
   const note = await db.leadNote.create({
-    data: { leadId: id, authorId: user.id, body: parsed.body },
+    data: { leadId: id, authorName: parsed.authorName || "Klar team", body: parsed.body },
   });
-  await audit(user.id, "lead.note.added", "lead", id);
+  await audit("portal", "lead.note.added", "lead", id);
 
   return NextResponse.json({ ok: true, noteId: note.id });
 }

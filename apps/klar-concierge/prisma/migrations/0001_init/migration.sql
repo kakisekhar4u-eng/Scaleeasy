@@ -2,9 +2,6 @@
 CREATE SCHEMA IF NOT EXISTS "public";
 
 -- CreateEnum
-CREATE TYPE "UserRole" AS ENUM ('admin', 'knowledge_editor', 'consultant', 'operations', 'viewer');
-
--- CreateEnum
 CREATE TYPE "KnowledgeStatus" AS ENUM ('draft', 'reviewed', 'verified');
 
 -- CreateEnum
@@ -15,31 +12,6 @@ CREATE TYPE "LeadPriority" AS ENUM ('low', 'medium', 'high', 'urgent');
 
 -- CreateEnum
 CREATE TYPE "CRMDeliveryStatus" AS ENUM ('disabled', 'pending', 'submitted', 'failed', 'manual_intervention');
-
--- CreateTable
-CREATE TABLE "User" (
-    "id" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "passwordHash" TEXT NOT NULL,
-    "role" "UserRole" NOT NULL DEFAULT 'viewer',
-    "active" BOOLEAN NOT NULL DEFAULT true,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Session" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "tokenHash" TEXT NOT NULL,
-    "expiresAt" TIMESTAMP(3) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
-);
 
 -- CreateTable
 CREATE TABLE "Destination" (
@@ -140,7 +112,7 @@ CREATE TABLE "Lead" (
     "crmLastError" TEXT,
     "crmLastAttempt" TIMESTAMP(3),
     "crmNextRetryAt" TIMESTAMP(3),
-    "consultantOwnerId" TEXT,
+    "consultantOwner" TEXT,
     "followUpDueAt" TIMESTAMP(3),
     "conversationSessionId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -180,7 +152,7 @@ CREATE TABLE "LeadItineraryDay" (
 CREATE TABLE "LeadNote" (
     "id" TEXT NOT NULL,
     "leadId" TEXT NOT NULL,
-    "authorId" TEXT NOT NULL,
+    "authorName" TEXT NOT NULL DEFAULT 'Klar team',
     "body" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -191,7 +163,7 @@ CREATE TABLE "LeadNote" (
 CREATE TABLE "LeadAssignment" (
     "id" TEXT NOT NULL,
     "leadId" TEXT NOT NULL,
-    "consultantId" TEXT NOT NULL,
+    "consultantName" TEXT NOT NULL,
     "assignedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "LeadAssignment_pkey" PRIMARY KEY ("id")
@@ -235,18 +207,6 @@ CREATE TABLE "AuditRecord" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Session_tokenHash_key" ON "Session"("tokenHash");
-
--- CreateIndex
-CREATE INDEX "Session_userId_idx" ON "Session"("userId");
-
--- CreateIndex
-CREATE INDEX "Session_expiresAt_idx" ON "Session"("expiresAt");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Destination_slug_key" ON "Destination"("slug");
 
 -- CreateIndex
@@ -277,9 +237,6 @@ CREATE INDEX "Lead_crmStatus_idx" ON "Lead"("crmStatus");
 CREATE INDEX "Lead_createdAt_idx" ON "Lead"("createdAt");
 
 -- CreateIndex
-CREATE INDEX "Lead_consultantOwnerId_idx" ON "Lead"("consultantOwnerId");
-
--- CreateIndex
 CREATE INDEX "LeadRecommendation_leadId_idx" ON "LeadRecommendation"("leadId");
 
 -- CreateIndex
@@ -299,9 +256,6 @@ CREATE INDEX "AnalyticsEvent_name_createdAt_idx" ON "AnalyticsEvent"("name", "cr
 
 -- CreateIndex
 CREATE INDEX "AuditRecord_action_createdAt_idx" ON "AuditRecord"("action", "createdAt");
-
--- AddForeignKey
-ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "DestinationMonth" ADD CONSTRAINT "DestinationMonth_destinationId_fkey" FOREIGN KEY ("destinationId") REFERENCES "Destination"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -325,13 +279,7 @@ ALTER TABLE "LeadItineraryDay" ADD CONSTRAINT "LeadItineraryDay_leadId_fkey" FOR
 ALTER TABLE "LeadNote" ADD CONSTRAINT "LeadNote_leadId_fkey" FOREIGN KEY ("leadId") REFERENCES "Lead"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "LeadNote" ADD CONSTRAINT "LeadNote_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "LeadAssignment" ADD CONSTRAINT "LeadAssignment_leadId_fkey" FOREIGN KEY ("leadId") REFERENCES "Lead"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "LeadAssignment" ADD CONSTRAINT "LeadAssignment_consultantId_fkey" FOREIGN KEY ("consultantId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CRMDeliveryAttempt" ADD CONSTRAINT "CRMDeliveryAttempt_leadId_fkey" FOREIGN KEY ("leadId") REFERENCES "Lead"("id") ON DELETE CASCADE ON UPDATE CASCADE;
