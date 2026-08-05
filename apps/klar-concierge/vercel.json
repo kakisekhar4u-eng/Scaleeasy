@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "installCommand": "npm install",
+  "buildCommand": "npm run build",
+  "_cronsNote": "Enable this cron only when CRM_ENABLED=true. It drives the CRM retry worker.",
+  "_cronsExample": [
+    { "path": "/api/internal/crm-retry", "schedule": "*/15 * * * *" }
+  ]
+}

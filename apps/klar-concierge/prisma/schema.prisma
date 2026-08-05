@@ -1,0 +1,310 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  knowledge_editor
+  consultant
+  operations
+  viewer
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         UserRole @default(viewer)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  sessions        Session[]
+  leadAssignments LeadAssignment[]
+  leadNotes       LeadNote[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+enum KnowledgeStatus {
+  draft
+  reviewed
+  verified
+}
+
+model Destination {
+  id      String          @id @default(cuid())
+  slug    String          @unique
+  name    String
+  country String
+  region  String
+  status  KnowledgeStatus @default(draft)
+
+  /// Full DestinationKnowledge JSON (summary, suitability, food, practicality…)
+  profile Json
+
+  reviewedBy   String?
+  reviewedAt   DateTime?
+  nextReviewAt DateTime?
+  version      String    @default("1.0.0")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  months  DestinationMonth[]
+  sources DestinationSource[]
+
+  @@index([status])
+}
+
+model DestinationMonth {
+  id            String @id @default(cuid())
+  destinationId String
+  month         Int
+  seasonScore   Int
+  seasonLabel   String
+  rainfall      String
+  humidity      String
+  crowdLevel    String
+  highlights    Json
+  warnings      Json
+
+  destination Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+
+  @@unique([destinationId, month])
+}
+
+model DestinationSource {
+  id              String   @id @default(cuid())
+  destinationId   String
+  sourceName      String
+  sourceType      String
+  sourceReference String?
+  reliability     String
+  accessedAt      DateTime
+
+  destination Destination @relation(fields: [destinationId], references: [id], onDelete: Cascade)
+
+  @@index([destinationId])
+}
+
+model ConversationSession {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages ConversationMessage[]
+  leads    Lead[]
+}
+
+model ConversationMessage {
+  id        String   @id @default(cuid())
+  sessionId String
+  role      String
+  content   String
+  createdAt DateTime @default(now())
+
+  session ConversationSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+}
+
+enum LeadStage {
+  new_enquiry
+  consultant_assigned
+  contact_attempted
+  requirement_confirmed
+  quote_in_preparation
+  quote_sent
+  follow_up
+  converted
+  lost
+}
+
+enum LeadPriority {
+  low
+  medium
+  high
+  urgent
+}
+
+enum CRMDeliveryStatus {
+  disabled
+  pending
+  submitted
+  failed
+  manual_intervention
+}
+
+model Lead {
+  id             String @id @default(cuid())
+  reference      String @unique
+  idempotencyKey String @unique
+
+  source String @default("klar-concierge")
+
+  stage    LeadStage    @default(new_enquiry)
+  priority LeadPriority @default(medium)
+
+  customerName            String
+  customerPhone           String
+  customerEmail           String
+  preferredContactChannel String
+  preferredContactTime    String?
+  additionalNotes         String?
+  consent                 Boolean
+  consentTimestamp        DateTime
+
+  /// Structured TravelBrief JSON
+  tripBrief Json
+
+  /// Conversation transcript JSON [{role, content, createdAt}]
+  transcript Json
+
+  selectedConceptId       String?
+  selectedDestinationSlug String?
+  selectedDirection       String?
+
+  /// Itinerary days JSON
+  itinerary Json
+
+  leadScore        Int
+  leadScoreReasons Json
+
+  crmStatus       CRMDeliveryStatus @default(disabled)
+  crmProvider     String            @default("placeholder")
+  crmAttempts     Int               @default(0)
+  crmReferenceId  String?
+  crmLastError    String?
+  crmLastAttempt  DateTime?
+  crmNextRetryAt  DateTime?
+
+  consultantOwnerId String?
+  followUpDueAt     DateTime?
+
+  conversationSessionId String?
+  conversationSession   ConversationSession? @relation(fields: [conversationSessionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  recommendations LeadRecommendation[]
+  itineraryDays   LeadItineraryDay[]
+  notes           LeadNote[]
+  assignments     LeadAssignment[]
+  crmDeliveries   CRMDeliveryAttempt[]
+
+  @@index([stage])
+  @@index([crmStatus])
+  @@index([createdAt])
+  @@index([consultantOwnerId])
+}
+
+model LeadRecommendation {
+  id              String @id @default(cuid())
+  leadId          String
+  conceptId       String
+  destinationSlug String
+  direction       String
+  score           Json
+  reasons         Json
+  tradeOff        String
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+}
+
+model LeadItineraryDay {
+  id         String @id @default(cuid())
+  leadId     String
+  day        Int
+  title      String
+  pace       String
+  activities Json
+  notes      Json
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@unique([leadId, day])
+}
+
+model LeadNote {
+  id        String   @id @default(cuid())
+  leadId    String
+  authorId  String
+  body      String
+  createdAt DateTime @default(now())
+
+  lead   Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  author User @relation(fields: [authorId], references: [id])
+
+  @@index([leadId])
+}
+
+model LeadAssignment {
+  id           String   @id @default(cuid())
+  leadId       String
+  consultantId String
+  assignedAt   DateTime @default(now())
+
+  lead       Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  consultant User @relation(fields: [consultantId], references: [id])
+
+  @@index([leadId])
+}
+
+model CRMDeliveryAttempt {
+  id           String   @id @default(cuid())
+  leadId       String
+  provider     String
+  attempt      Int
+  status       String
+  errorCode    String?
+  errorMessage String?
+  createdAt    DateTime @default(now())
+
+  lead Lead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+
+  @@index([leadId])
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  name      String
+  /// Non-sensitive properties only — enforced at the service layer.
+  props     Json?
+  createdAt DateTime @default(now())
+
+  @@index([name, createdAt])
+}
+
+model AuditRecord {
+  id        String   @id @default(cuid())
+  actor     String
+  action    String
+  entity    String?
+  entityId  String?
+  detail    Json?
+  createdAt DateTime @default(now())
+
+  @@index([action, createdAt])
+}

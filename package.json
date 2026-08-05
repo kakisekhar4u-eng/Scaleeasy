@@ -2,9 +2,14 @@
   "name": "scaleeasy",
   "private": true,
   "workspaces": ["apps/*"],
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
   "scripts": {
     "dev:api": "npm --workspace apps/api run dev",
     "dev:web": "npm --workspace apps/web run dev",
+    "dev:klar": "npm --workspace apps/klar-concierge run dev",
     "db:migrate": "npm --workspace apps/api run db:migrate"
   }
 }
