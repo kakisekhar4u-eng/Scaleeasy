@@ -19,15 +19,18 @@
   --blue:#2B5895;--blue-soft:#E3EBF7;--green:#1D6838;--green-soft:#DFF0E4;
   --r-sheet:18px;--r-card:12px;--r-ctl:10px;
   --font:"Anek Latin",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  color-scheme:light dark;
+  color-scheme:light;
 }
-@media (prefers-color-scheme:dark){:root{
-  --page:#0E1513;--surface:#16201D;--sunk:#1B2623;--line:#29372F;--line-strong:#3E4F48;
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--page:#0E1513;--surface:#16201D;--sunk:#1B2623;--line:#29372F;--line-strong:#3E4F48;
   --ink:#E7EFEB;--ink-2:#B4C2BC;--ink-3:#93A29C;
   --brand:#3FB8A6;--brand-ink:#04211C;--brand-soft:#15352F;--brand-strong:#6BD0C0;
   --amber:#F0B45A;--amber-soft:#33260F;--red:#F08A80;--red-soft:#3A1C19;--on-red:#2A0D0A;
-  --blue:#93B7EA;--blue-soft:#192740;--green:#83D39D;--green-soft:#15301F;
-}}
+  --blue:#93B7EA;--blue-soft:#192740;--green:#83D39D;--green-soft:#15301F;color-scheme:dark;}}
+:root[data-theme="dark"]{--page:#0E1513;--surface:#16201D;--sunk:#1B2623;--line:#29372F;--line-strong:#3E4F48;
+  --ink:#E7EFEB;--ink-2:#B4C2BC;--ink-3:#93A29C;
+  --brand:#3FB8A6;--brand-ink:#04211C;--brand-soft:#15352F;--brand-strong:#6BD0C0;
+  --amber:#F0B45A;--amber-soft:#33260F;--red:#F08A80;--red-soft:#3A1C19;--on-red:#2A0D0A;
+  --blue:#93B7EA;--blue-soft:#192740;--green:#83D39D;--green-soft:#15301F;color-scheme:dark;}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--page);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.5;font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
@@ -50,10 +53,11 @@ a{color:var(--brand-strong)}
 .wordmark{display:inline-flex;align-items:baseline;gap:7px;font-weight:750;font-size:22px;font-stretch:84%;letter-spacing:-.01em;color:var(--ink);text-decoration:none}
 .wordmark b{font-weight:750;color:var(--brand)}
 .wordmark .wm-sub{font-weight:450;font-size:16px;font-stretch:100%;color:var(--ink-3)}
-.topbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top));background:var(--page);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:10;background:var(--page)}
+.topbar{position:sticky;top:env(safe-area-inset-top, 0px);z-index:5;display:flex;align-items:center;justify-content:space-between;gap:10px;padding-block:12px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));background:var(--page);border-bottom:1px solid var(--line)}
 .demo-pill{font-size:13px;font-weight:650;color:var(--amber);background:var(--amber-soft);border-radius:999px;padding:4px 10px}
-main#view{display:block;padding:22px 16px calc(100px + env(safe-area-inset-bottom));max-width:760px;margin:0 auto;outline:none}
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:5;display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+main#view{display:block;padding-block:22px calc(100px + env(safe-area-inset-bottom, 0px));padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));max-width:760px;margin:0 auto;outline:none}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:5;display:grid;grid-template-columns:repeat(var(--tabs,4),1fr);background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom, 0px);padding-left:max(8px, env(safe-area-inset-left, 0px));padding-right:max(8px, env(safe-area-inset-right, 0px))}
 .tab{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px 6px;min-height:58px;font-size:12.5px;font-weight:600;color:var(--ink-3);text-decoration:none}
 .tab[aria-current=page]{color:var(--brand-strong)}
 .count{position:absolute;top:4px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--amber);color:var(--surface);font-size:11.5px;font-weight:700;line-height:18px;text-align:center}
@@ -72,11 +76,31 @@ body.bare main#view{padding-bottom:48px}
   .nav .count{position:static;margin-left:auto}
   .rail-foot{margin-top:auto;padding:10px;font-size:13.5px;color:var(--ink-3)}
   .rail-foot strong{display:block;color:var(--ink-2);font-weight:600}
-  main#view{padding:40px 44px 56px;max-width:820px;margin:0}
+  main#view{padding-block:40px 56px;padding-left:max(44px, env(safe-area-inset-left, 0px));padding-right:max(44px, env(safe-area-inset-right, 0px));max-width:820px;margin:0}
   main#view.wide{max-width:1260px}
   body.bare main#view{margin:0 auto}
   h1{font-size:34px}
 }
+
+/* role switcher (demo only) */
+.role{position:relative;display:inline-flex;align-items:center;flex:none}
+.role select{appearance:none;-webkit-appearance:none;width:auto;min-height:36px;padding:4px 30px 4px 12px;border:1px solid transparent;border-radius:999px;background:var(--amber-soft);color:var(--amber);font:inherit;font-size:14.5px;font-weight:650;cursor:pointer}
+.role .ic{position:absolute;right:9px;width:16px;height:16px;color:var(--amber);pointer-events:none}
+.role-lbl{margin:0 10px 6px;font-size:13px;color:var(--ink-3)}
+.rail .role{display:flex;margin:0 10px 20px}
+.rail .role select{width:100%;min-height:40px}
+@media (max-width:380px){.topbar .wm-sub{display:none}}
+
+/* admin */
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:28px}
+@media (min-width:760px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.kpi{display:grid;gap:2px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card)}
+.kpi span{font-size:14px;color:var(--ink-3)}
+.kpi strong{font-size:30px;font-weight:700;font-stretch:82%;line-height:1.1}
+.kpi small{font-size:13.5px;color:var(--ink-2)}
+.acc.health{align-items:flex-start}
+.acc.health .stack{gap:6px;flex:1;min-width:0}
+.sec-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:30px 0 10px}
 
 /* controls */
 .btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border:1px solid var(--line-strong);border-radius:var(--r-ctl);background:var(--surface);color:var(--ink);font:inherit;font-size:15.5px;font-weight:600;line-height:1.2;text-decoration:none;cursor:pointer}
@@ -303,13 +327,15 @@ body.bare #toast{bottom:28px}
 <body>
 <div class="app">
   <aside class="rail">
-    <a class="wordmark" href="#/ship"><span class="wm">scale<b>ezy</b></span><span class="wm-sub">Logistics</span></a>
+    <a class="wordmark" href="#ship"><span class="wm">scale<b>ezy</b></span><span class="wm-sub">Logistics</span></a>
+    <p class="role-lbl">Demo: view as</p>
+    <span class="role" id="roleRail"></span>
     <nav id="railNav" aria-label="Main"></nav>
     <div class="rail-foot" id="railFoot"></div>
   </aside>
   <header class="topbar">
-    <a class="wordmark" href="#/ship"><span class="wm">scale<b>ezy</b></span><span class="wm-sub">Logistics</span></a>
-    <span class="demo-pill">Demo</span>
+    <a class="wordmark" href="#ship"><span class="wm">scale<b>ezy</b></span><span class="wm-sub">Logistics</span></a>
+    <span class="role" id="roleTop"></span>
   </header>
   <main id="view" tabindex="-1"></main>
   <nav class="tabbar" id="tabNav" aria-label="Main"></nav>
@@ -345,9 +371,20 @@ function vals(form){ const o = {}; new FormData(form).forEach((v, k) => { o[k] =
 
 /* ---------- storage: this browser only ---------- */
 let memory = null;
-const blank = () => ({v:2, business:null, pickups:[], accounts:{}, shipments:[], seq:0});
+const blank = () => ({v:2, business:null, pickups:[], accounts:{}, shipments:[], seq:0, role:'owner', team:[], suspended:false, suspendReason:'', sellerStatus:{}, apiLog:[], audit:[], createdAt:null});
 function load(){
-  try { const raw = localStorage.getItem(KEY); if (raw){ const d = JSON.parse(raw); if (d && d.v === 2) return d; } } catch (e) {}
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw){
+      const d = JSON.parse(raw);
+      if (d && d.v === 2){
+        const m = Object.assign(blank(), d);
+        if (m.business && !m.team.length){ const p = m.pickups[0]; m.team = [{id:'u' + uid(), name:(p && p.contact) || 'Owner', phone:(p && p.phone) || '', role:'owner', status:'active'}]; }
+        if (!m.createdAt) m.createdAt = Date.now();
+        return m;
+      }
+    }
+  } catch (e) {}
   return memory || blank();
 }
 let S = load();
@@ -477,6 +514,76 @@ function groupOf(sh){
   return 'closed';
 }
 
+/* ---------- roles ---------- */
+const PERMS = {
+  owner:['ship','manageCouriers','editBusiness','manageTeam','seeCod','returnParcel'],
+  staff:['ship'],
+  admin:['admin']
+};
+const can = p => (PERMS[S.role] || []).includes(p);
+function currentUser(){
+  if (S.role === 'admin') return {name:'Scaleezy admin', role:'admin'};
+  return S.team.find(m => m.role === S.role) || {name: S.role === 'owner' ? 'Owner' : 'Staff member', role:S.role};
+}
+function pushLog(e){ S.apiLog.unshift(e); S.apiLog.sort((a, b) => b.at - a.at); if (S.apiLog.length > 80) S.apiLog.length = 80; }
+function logCall(acct, call, o){ o = o || {}; const at = o.at || Date.now(); pushLog({at, org:'demo', acct, call, code:o.code || 200, ms:o.ms || 160 + hash(acct + call + at) % 640, dir:o.dir || 'out'}); }
+function audit(action, org, at, actor){ S.audit.unshift({at: at || Date.now(), actor: actor || currentUser().name, org: org || 'demo', action}); S.audit.sort((a, b) => b.at - a.at); if (S.audit.length > 80) S.audit.length = 80; }
+
+/* ---------- admin console data (example sellers are made up) ---------- */
+const EXAMPLES = [
+  {id:'ex1', name:'Saanvi Ethnic Wear', city:'Jaipur', plan:'Paid', status:'active', couriers:['delhivery','shiprocket','xpressbees'], month:412, joinedDays:136, lastH:1, team:4},
+  {id:'ex2', name:'Kanchi Silk House', city:'Chennai', plan:'Paid', status:'active', couriers:['delhivery','xpressbees'], month:186, joinedDays:118, lastH:3, team:2},
+  {id:'ex3', name:'Neelam Boutique', city:'Pune', plan:'Free tier', status:'trial', couriers:['shiprocket'], month:23, joinedDays:11, lastH:26, team:1},
+  {id:'ex4', name:'Loom Street', city:'Kochi', plan:'Paid', status:'suspended', couriers:['delhivery','shiprocket'], month:0, joinedDays:174, lastH:310, team:3, reason:'Payment overdue'},
+  {id:'ex5', name:'Rangrez Prints', city:'Ahmedabad', plan:'Paid', status:'active', couriers:['delhivery','shiprocket','xpressbees'], month:274, joinedDays:191, lastH:0.5, team:5}
+];
+const SELLER_ST = {active:{label:'Active', tone:'green'}, trial:{label:'Trial', tone:'blue'}, suspended:{label:'Suspended', tone:'red'}};
+const CODE_TXT = {200:'OK', 401:'Token rejected', 429:'Rate limited', 504:'Timed out'};
+const HEALTH = {delhivery:{calls:1842, fails:9, ms:410}, shiprocket:{calls:1206, fails:14, ms:690}, xpressbees:{calls:954, fails:61, ms:1840}};
+const SEED_NOW = Date.now();
+const SEED_LOG = (() => {
+  const calls = ['Check PIN coverage and rates','Create shipment','Generate label','Request pickup','Tracking update received'];
+  const act = EXAMPLES.filter(e => e.status !== 'suspended'), out = [];
+  for (let i = 0; i < 22; i++){
+    const e = act[i % act.length], k = e.couriers[i % e.couriers.length], call = calls[(i * 3) % calls.length];
+    let code = 200;
+    if (k === 'xpressbees' && i % 4 === 1) code = 504;
+    if (k === 'shiprocket' && i === 4) code = 429;
+    out.push({at: SEED_NOW - (i * 47 + 12) * 60000, org:e.id, acct:k, call, code, ms: code === 504 ? 30000 : 150 + hash(k + i) % 900, dir: call.startsWith('Tracking') ? 'in' : 'out'});
+  }
+  return out;
+})();
+const fmtMs = ms => ms >= 1000 ? (ms / 1000).toFixed(1) + ' s' : ms + ' ms';
+function ago(t){
+  const m = Math.round((Date.now() - t) / 60000);
+  if (m < 1) return 'just now';
+  if (m < 60) return m + ' min ago';
+  const h = Math.round(m / 60); if (h < 24) return h + (h === 1 ? ' hour ago' : ' hours ago');
+  const d = Math.round(h / 24); return d + (d === 1 ? ' day ago' : ' days ago');
+}
+function sellerName(org){ if (org === 'demo') return S.business ? S.business.name : 'Demo business'; const e = EXAMPLES.find(x => x.id === org); return e ? e.name : org; }
+function sellers(){
+  const now = Date.now(), p = defaultPickup();
+  const monthStart = new Date(); monthStart.setDate(1); monthStart.setHours(0, 0, 0, 0);
+  const demo = {id:'demo', demo:true, name:S.business.name, city: p ? placeOf(p.pin) : '', plan:'Free tier', status: S.suspended ? 'suspended' : 'active', reason:S.suspendReason,
+    couriers: Object.keys(ACCOUNTS).filter(k => S.accounts[k] && S.accounts[k].connected),
+    month: S.shipments.filter(sh => sh.createdAt >= monthStart.getTime()).length,
+    joinedAt: S.createdAt || now, lastAt: S.shipments.length ? Math.max(...S.shipments.map(lastAt)) : (S.createdAt || now), team: S.team.length};
+  return [demo, ...EXAMPLES.map(e => { const o = S.sellerStatus[e.id]; return {...e, status: o ? o.status : e.status, reason: o ? o.reason : (e.reason || ''), joinedAt: now - e.joinedDays * DAY, lastAt: now - e.lastH * 36e5}; })];
+}
+function setSellerStatus(id, status, reason){
+  if (id === 'demo'){ S.suspended = status === 'suspended'; S.suspendReason = reason || ''; }
+  else S.sellerStatus[id] = {status, reason: reason || ''};
+}
+function health(k){
+  const since = Date.now() - DAY;
+  const mine = S.apiLog.filter(l => l.acct === k && l.at >= since);
+  const calls = HEALTH[k].calls + mine.length, fails = HEALTH[k].fails + mine.filter(l => l.code >= 400).length;
+  const rate = (1 - fails / calls) * 100;
+  const errs = [...S.apiLog, ...SEED_LOG].filter(l => l.acct === k && l.code >= 400).sort((a, b) => b.at - a.at);
+  return {calls, fails, rate, ms: HEALTH[k].ms, degraded: rate < 97, lastErr: errs[0] || null, sellers: sellers().filter(s => s.couriers.includes(k)).length};
+}
+
 /* ---------- shipment model ---------- */
 const byId = id => S.shipments.find(x => x.id === id);
 const defaultPickup = () => S.pickups.find(p => p.isDefault) || S.pickups[0] || null;
@@ -509,7 +616,8 @@ function makeShipment(o){
     kg: o.kg, dims: (o.l && o.b && o.h) ? [o.l, o.b, o.h] : null, billedKg: bw.kg, bySize: bw.bySize,
     pay: o.pay, value: o.value || 0, price, zone: z, createdAt: at, edd: addDays(at, maxD).getTime(),
     pickupDate: null, events: [], awaiting: false, failure: null, decision: null, attempts: 0,
-    remit: o.pay === 'cod' ? 'later' : 'na', remitAt: null, deliveredAt: null
+    remit: o.pay === 'cod' ? 'later' : 'na', remitAt: null, deliveredAt: null,
+    bookedBy: o.bookedBy || currentUser().name, decidedBy: ''
   };
   addEvent(sh, 'booked', at);
   return sh;
@@ -535,10 +643,12 @@ function failDelivery(sh){
 }
 function decide(sh, d){
   const A = ACCOUNTS[sh.acct].name;
-  sh.awaiting = false; sh.decision = d;
-  if (d === 'rto'){ addSellerNote(sh, 'You asked ' + A + ' to return the parcel to you'); if (sh.pay === 'cod') sh.remit = 'na'; }
+  const who = currentUser().name;
+  sh.awaiting = false; sh.decision = d; sh.decidedBy = who;
+  logCall(sh.acct, 'Send failed-delivery decision');
+  if (d === 'rto'){ addSellerNote(sh, who + ' asked ' + A + ' to return the parcel'); if (sh.pay === 'cod') sh.remit = 'na'; }
   else {
-    addSellerNote(sh, d === 'update' ? 'You updated the customer details and asked ' + A + ' to try again' : 'You asked ' + A + ' to try delivery again');
+    addSellerNote(sh, d === 'update' ? who + ' updated the customer details and asked ' + A + ' to try again' : who + ' asked ' + A + ' to try delivery again');
     sh.edd = addDays(Date.now(), 1).getTime();
   }
 }
@@ -553,17 +663,19 @@ function workTime(t, now, slot){
 function addSamples(){
   const p = defaultPickup(); if (!p) return;
   const H = 36e5, now = Date.now();
-  const path = ['pickup_scheduled','picked_up','in_transit','out_for_delivery'];
+  const ownerName = (S.team.find(m => m.role === 'owner') || {name:'Owner'}).name;
+  const staffName = (S.team.find(m => m.role === 'staff') || {name:ownerName}).name;
+  const path =['pickup_scheduled','picked_up','in_transit','out_for_delivery'];
   const defs = [
     {svcId:'dl-surface', toPin:'560038', customer:'Ananya Rao', phone:'9000000101', address:'12, 4th Cross, Indiranagar, Bengaluru', kg:0.8, l:22, b:16, h:8, pay:'prepaid', value:2199, ageH:96, steps:[...path,'delivered']},
-    {svcId:'xb-surface', toPin:'400050', customer:'Farah Khan', phone:'9000000102', address:'Flat 3B, Sea View Apartments, Bandra West, Mumbai', kg:1.5, l:30, b:24, h:12, pay:'cod', value:1899, ageH:54, steps:path},
+    {svcId:'xb-surface', toPin:'400050', customer:'Farah Khan', phone:'9000000102', address:'Flat 3B, Sea View Apartments, Bandra West, Mumbai', kg:1.5, l:30, b:24, h:12, pay:'cod', value:1899, ageH:54, steps:path, staff:true},
     {svcId:'sr-ekart', toPin:'600017', customer:'Lakshmi Priya', phone:'9000000103', address:'22, Usman Road, T. Nagar, Chennai', kg:0.3, l:30, b:25, h:2, pay:'cod', value:2450, ageH:76, steps:[...path,'FAIL']},
     {svcId:'dl-express', toPin:'700019', customer:'Meghna Das', phone:'9000000104', address:'8, Ballygunge Place, Kolkata', kg:0.8, l:22, b:16, h:8, pay:'cod', value:1299, ageH:130, steps:[...path,'delivered']},
-    {svcId:'dl-surface', toPin:'500081', customer:'Riya Sharma', phone:'9000000105', address:'Flat 502, Cyber Towers Road, Madhapur, Hyderabad', kg:0.8, l:22, b:16, h:8, pay:'prepaid', value:1650, ageH:2, steps:[]}
+    {svcId:'dl-surface', toPin:'500081', customer:'Riya Sharma', phone:'9000000105', address:'Flat 502, Cyber Towers Road, Madhapur, Hyderabad', kg:0.8, l:22, b:16, h:8, pay:'prepaid', value:1650, ageH:2, steps:[], staff:true}
   ];
   for (const d of defs){
     const at = workTime(now - d.ageH * H, now, 0);
-    const sh = makeShipment({...d, pickup:p, at});
+    const sh = makeShipment({...d, pickup:p, at, bookedBy: d.staff ? staffName : ownerName});
     const span = (now - at) * 0.85;
     let prev = at;
     d.steps.forEach((step, i) => {
@@ -579,6 +691,8 @@ function addSamples(){
       }
     });
     S.shipments.push(sh);
+    logCall(sh.acct, 'Create shipment', {at: sh.createdAt});
+    sh.events.slice(1).forEach(e => logCall(sh.acct, 'Tracking update received', {at: e.at, dir:'in'}));
   }
   S.shipments.sort((a, b) => b.createdAt - a.createdAt);
 }
@@ -586,13 +700,20 @@ function loadSampleSetup(){
   S = blank();
   S.business = {name:'Indigo Thread Boutique', gstin:''};
   S.pickups = [{id:'p' + uid(), name:'Gachibowli store', contact:'Store manager', phone:'9000000100', address:'Shop 14, Gachibowli Main Road, Hyderabad', pin:'500032', isDefault:true}];
-  for (const k of Object.keys(ACCOUNTS)) S.accounts[k] = {connected:true, at:Date.now()};
+  S.createdAt = Date.now() - 21 * DAY;
+  S.team = [
+    {id:'u' + uid(), name:'Meera Iyer', phone:'9000000100', role:'owner', status:'active'},
+    {id:'u' + uid(), name:'Arjun Rao', phone:'9000000106', role:'staff', status:'active'}
+  ];
+  audit('Business set up', 'demo', S.createdAt, 'Meera Iyer');
+  Object.keys(ACCOUNTS).forEach((k, i) => { S.accounts[k] = {connected:true, at:Date.now()}; audit(ACCOUNTS[k].name + ' connected', 'demo', S.createdAt + (i + 1) * 36e5, 'Meera Iyer'); });
+  audit('Invited Arjun Rao as staff', 'demo', S.createdAt + DAY, 'Meera Iyer');
   addSamples();
   save();
 }
 
 /* ---------- UI state (not stored) ---------- */
-const ui = {draft:null, quotes:null, sort:'cheap', pick:null, bookDraft:{}, filter:'all', q:'', justBooked:null, panel:null, panelFor:null, connect:{}, confirmDisc:null, confirmReset:false, editPickup:null};
+const ui = {draft:null, quotes:null, sort:'cheap', pick:null, bookDraft:{}, filter:'all', q:'', justBooked:null, panel:null, panelFor:null, connect:{}, confirmDisc:null, confirmReset:false, editPickup:null, invite:false, confirmRemove:null, sFilter:'all', sq:'', logFilter:'all', confirmSeller:null};
 function freshDraft(){ const p = defaultPickup(); return {pickupId: p ? p.id : null, toPin:'', preset:'small', kg:'0.8', l:'22', b:'16', h:'8', pay:'prepaid', value:''}; }
 
 /* ---------- small renderers ---------- */
@@ -601,10 +722,19 @@ const ICONS = {
   list:'<path d="M9 6h12M9 12h12M9 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01"/>',
   couriers:'<path d="M2 6h12v10H2z"/><path d="M14 9h4l3 3v4h-7"/><circle cx="6" cy="18.2" r="1.7"/><circle cx="17" cy="18.2" r="1.7"/>',
   settings:'<path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17" r="2"/>',
-  back:'<path d="M15 5l-7 7 7 7"/>'
+  back:'<path d="M15 5l-7 7 7 7"/>',
+  chev:'<path d="M6 9l6 6 6-6"/>',
+  gauge:'<path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16l4-5"/><path d="M4 20h16"/>',
+  store:'<path d="M4 9h16l-1.5-5h-13L4 9Z"/><path d="M5 9v11h14V9"/><path d="M10 20v-6h4v6"/>',
+  pulse:'<path d="M3 12h4l2-6 4 12 2-6h6"/>'
 };
 const icon = n => '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[n] + '</svg>';
-const NAV = [['ship','Ship','ship'],['shipments','Shipments','list'],['couriers','Couriers','couriers'],['settings','Settings','settings']];
+const NAVS = {
+  owner:[['ship','Ship','ship'],['shipments','Shipments','list'],['couriers','Couriers','couriers'],['business','Settings','settings']],
+  staff:[['ship','Ship','ship'],['shipments','Shipments','list'],['couriers','Couriers','couriers']],
+  admin:[['admin','Overview','gauge'],['admin-sellers','Sellers','store'],['admin-couriers','Courier health','pulse'],['admin-activity','Call log','list']]
+};
+const ROLES = [['owner','As owner'],['staff','As staff'],['admin','As admin']];
 function attrs(o){ return Object.entries(o || {}).map(([k, v]) => ' ' + k + '="' + esc(v) + '"').join(''); }
 function field(name, label, type, value, at, hint){
   const id = 'f-' + name;
@@ -649,13 +779,14 @@ function toast(msg){ const el = $('#toast'); el.textContent = msg; el.classList.
 /* ---------- views: setup ---------- */
 function setupView(){
   return '<div class="setup">' +
-    '<a class="wordmark" href="#/setup"><span class="wm">scale<b>ezy</b></span><span class="wm-sub">Logistics</span></a>' +
+    '<a class="wordmark" href="#welcome"><span class="wm">scale<b>ezy</b></span><span class="wm-sub">Logistics</span></a>' +
     '<h1 class="setup-title">Ship with the couriers you already use</h1>' +
     '<p class="lede" style="margin:0">Compare prices across your own courier accounts by PIN code, book in one tap and track every parcel in one list. Your courier picks up and delivers.</p>' +
     '<div class="card stack"><h2>Look around first</h2><p class="hint">Loads a sample boutique in Hyderabad with three connected courier accounts and five shipments at different stages.</p><button class="btn primary" type="button" data-act="sample">Explore with sample data</button></div>' +
     '<form id="setupForm" class="card stack" novalidate>' +
       '<h2>Or set up your business</h2>' +
       field('bizName', 'Business name', 'text', '', {autocomplete:'organization'}) +
+      field('ownerName', 'Your name', 'text', '', {autocomplete:'name'}, 'You become the account owner. You can add staff later.') +
       field('gstin', 'GSTIN (optional)', 'text', '', {autocapitalize:'characters', maxlength:15, autocomplete:'off'}) +
       '<h3>Pickup address</h3>' +
       field('pName', 'Name for this address', 'text', 'Main store') +
@@ -692,14 +823,15 @@ function billHint(d){
 }
 const valueHint = d => d.pay === 'cod' ? 'Your courier collects this amount in cash from the customer.' : 'Printed on the label and used for any claim. Optional for prepaid.';
 function shipView(){
-  if (!S.pickups.length) return '<h1>Ship a parcel</h1><p class="lede">Add a pickup address first, so couriers know where to collect from.</p><a class="btn primary" href="#/settings">Add pickup address</a>';
+  if (!S.pickups.length) return '<h1>Ship a parcel</h1><p class="lede">Add a pickup address first, so couriers know where to collect from.</p><a class="btn primary" href="#business">Add pickup address</a>';
   if (!ui.draft || !S.pickups.find(p => p.id === ui.draft.pickupId)) ui.draft = freshDraft();
   const d = ui.draft, p = S.pickups.find(x => x.id === d.pickupId);
   const anyConnected = Object.keys(ACCOUNTS).some(k => S.accounts[k] && S.accounts[k].connected);
   const tm = toMeta(d.toPin);
   return '<h1>Ship a parcel</h1>' +
     '<p class="lede">Prices come from the courier accounts you connect. Your courier picks up and delivers.</p>' +
-    (anyConnected ? '' : '<p class="note amber" style="margin-bottom:18px">No courier accounts connected yet. <a href="#/couriers">Connect a courier</a> to see prices.</p>') +
+    suspendedNote() +
+    (anyConnected ? '' : '<p class="note amber" style="margin-bottom:18px">No courier accounts connected yet. ' + (can('manageCouriers') ? '<a href="#couriers">Connect a courier</a> to see prices.' : 'Ask the account owner to connect a courier.') + '</p>') +
     '<form id="shipForm" class="ship-form" novalidate>' +
       '<div class="route">' +
         '<div class="leg"><span class="leg-label" id="fromLbl">From</span>' +
@@ -719,9 +851,9 @@ function shipView(){
         '<div class="dims">' +
           '<div class="field"><label for="f-kg">Weight (kg)</label><input id="f-kg" name="kg" value="' + esc(d.kg) + '" inputmode="decimal" autocomplete="off" aria-describedby="f-kg-err billHint"></div>' +
           '<div class="field"><span class="lbl" id="sizeLbl">Size in cm (optional)</span><div class="lbh" role="group" aria-labelledby="sizeLbl">' +
-            '<input name="l" value="' + esc(d.l) + '" inputmode="numeric" autocomplete="off" aria-label="Length in cm" placeholder="L" aria-describedby="f-dims-err">' + '<span aria-hidden="true">×</span>' +
-            '<input name="b" value="' + esc(d.b) + '" inputmode="numeric" autocomplete="off" aria-label="Breadth in cm" placeholder="B" aria-describedby="f-dims-err">' + '<span aria-hidden="true">×</span>' +
-            '<input name="h" value="' + esc(d.h) + '" inputmode="numeric" autocomplete="off" aria-label="Height in cm" placeholder="H" aria-describedby="f-dims-err">' +
+            '<input id="f-l" name="l" value="' + esc(d.l) + '" inputmode="numeric" autocomplete="off" aria-label="Length in cm" placeholder="L" aria-describedby="f-dims-err">' + '<span aria-hidden="true">×</span>' +
+            '<input id="f-b" name="b" value="' + esc(d.b) + '" inputmode="numeric" autocomplete="off" aria-label="Breadth in cm" placeholder="B" aria-describedby="f-dims-err">' + '<span aria-hidden="true">×</span>' +
+            '<input id="f-h" name="h" value="' + esc(d.h) + '" inputmode="numeric" autocomplete="off" aria-label="Height in cm" placeholder="H" aria-describedby="f-dims-err">' +
           '</div></div>' +
         '</div>' +
         '<p class="ferr" id="f-kg-err" hidden></p><p class="ferr" id="f-dims-err" hidden></p>' +
@@ -732,10 +864,14 @@ function shipView(){
         '<div style="margin-top:14px">' + field('value', 'Order value (₹)', 'text', d.value, {inputmode:'decimal', autocomplete:'off'}) + '</div>' +
         '<p class="hint" id="valueHint" style="margin-top:6px">' + esc(valueHint(d)) + '</p>' +
       '</fieldset>' +
-      '<button class="btn primary block" type="submit">Compare couriers</button>' +
+      '<button class="btn primary block" type="submit"' + (S.suspended ? ' disabled' : '') + '>Compare couriers</button>' +
     '</form>' +
     '<div id="results">' + (ui.quotes ? resultsHtml() : '') + '</div>' +
     '<div id="bookArea">' + (ui.pick ? bookHtml() : '') + '</div>';
+}
+function suspendedNote(){
+  if (!S.suspended) return '';
+  return '<p class="note red" style="margin-bottom:18px">Your Scaleezy account is suspended' + (S.suspendReason ? ': ' + esc(S.suspendReason.toLowerCase()) : '') + ". You can still track parcels but can't book new shipments. Contact Scaleezy support to reactivate it.</p>";
 }
 function updateShipHints(){
   const d = ui.draft;
@@ -789,7 +925,7 @@ function resultsHtml(){
     (Q.ok.length > 1 ? '<div class="seg small" role="radiogroup" aria-label="Sort couriers">' + radio('sort', 'cheap', 'Cheapest first', ui.sort) + radio('sort', 'fast', 'Fastest first', ui.sort) + '</div>' : '') +
     (list.length ? '<ul class="quotes">' + list.map(quoteHtml).join('') + '</ul>' : '') +
     (rows.length ? '<details class="unavail"' + (Q.ok.length ? '' : ' open') + '><summary>' + rows.length + ' more not available on this route</summary><ul>' +
-      rows.map(r => '<li><span>' + esc(r.name) + '</span><span class="hint">' + (r.link ? '<a href="#/couriers/' + r.link + '">Connect</a>' : esc(r.why)) + '</span></li>').join('') + '</ul></details>' : '') +
+      rows.map(r => '<li><span>' + esc(r.name) + '</span><span class="hint">' + (r.link ? '<a href="#courier-' + r.link + '">Connect</a>' : esc(r.why)) + '</span></li>').join('') + '</ul></details>' : '') +
     '<p class="fine">Coming soon: Blue Dart, direct Ekart and Shadowfax accounts, and the ONDC network.</p>' +
   '</section>';
 }
@@ -834,7 +970,7 @@ function rowHtml(sh, activeId){
   const when = sh.status === 'delivered' ? 'Delivered ' + fmtDay(sh.deliveredAt)
     : TERMINAL.includes(sh.status) ? fmtDay(lastAt(sh)) : 'Expected ' + fmtDay(sh.edd);
   const active = sh.id === activeId;
-  return '<li><a class="row' + (active ? ' active' : '') + '" href="#/shipments/' + encodeURIComponent(sh.id) + '"' + (active ? ' aria-current="true"' : '') + '>' +
+  return '<li><a class="row' + (active ? ' active' : '') + '" href="#shipment-' + sh.id + '"' + (active ? ' aria-current="true"' : '') + '>' +
     '<span class="row-top"><span class="row-name">' + esc(sh.customer) + '</span>' + pill(sh) + '</span>' +
     '<span class="row-sub">' + esc(sh.ref) + ', ' + esc(svcLabel(sh)) + ', to ' + esc(placeOf(sh.toPin)) + ' ' + esc(sh.toPin) + '</span>' +
     '<span class="row-when">' + esc(when) + (sh.pay === 'cod' ? '<span class="tag">COD ' + rupee(sh.value) + '</span>' : '') + '</span>' +
@@ -847,14 +983,14 @@ function rowsHtml(activeId){
 }
 function listHtml(activeId){
   const all = S.shipments;
-  if (!all.length) return '<h1 style="margin-bottom:16px">Shipments</h1><div class="empty"><h2>No shipments yet</h2><p>Book your first parcel and it shows up here with tracking from your courier.</p><a class="btn primary" href="#/ship">Ship a parcel</a></div>';
+  if (!all.length) return '<h1 style="margin-bottom:16px">Shipments</h1><div class="empty"><h2>No shipments yet</h2><p>Book your first parcel and it shows up here with tracking from your courier.</p><a class="btn primary" href="#ship">Ship a parcel</a></div>';
   const counts = {}; FILTERS.forEach(([k]) => { counts[k] = 0; });
   all.forEach(sh => { counts.all++; counts[groupOf(sh)]++; });
   const pending = all.filter(sh => sh.remit === 'pending');
   const codSum = pending.reduce((n, sh) => n + sh.value, 0);
-  return '<div class="list-head"><h1>Shipments</h1><a class="btn primary" href="#/ship">Ship a parcel</a></div>' +
+  return '<div class="list-head"><h1>Shipments</h1><a class="btn primary" href="#ship">Ship a parcel</a></div>' + suspendedNote() +
     (counts.action ? '<div class="note amber strip"><span>' + (counts.action === 1 ? '1 failed delivery needs' : counts.action + ' failed deliveries need') + ' your decision.</span>' + (ui.filter === 'action' ? '' : '<button class="btn" type="button" data-act="filter" data-f="action">Review</button>') + '</div>' : '') +
-    (codSum ? '<p class="note strip">Couriers still owe you ' + rupee(codSum) + ' in cash on delivery from ' + pending.length + (pending.length === 1 ? ' delivered parcel.' : ' delivered parcels.') + '</p>' : '') +
+    (codSum && can('seeCod') ? '<p class="note strip">Couriers still owe you ' + rupee(codSum) + ' in cash on delivery from ' + pending.length + (pending.length === 1 ? ' delivered parcel.' : ' delivered parcels.') + '</p>' : '') +
     '<div class="list-tools">' +
       '<label class="sr-only" for="shipSearch">Search shipments</label><input id="shipSearch" type="search" value="' + esc(ui.q) + '" placeholder="Name, phone, order or tracking number" autocomplete="off">' +
       '<div class="chips" role="group" aria-label="Filter shipments">' + FILTERS.filter(([k]) => k === 'all' || counts[k] || ui.filter === k).map(([k, l]) =>
@@ -866,12 +1002,12 @@ function shipmentsView(id){
   const sh = id ? byId(id) : null;
   const wide = isWide();
   if (wide) view.classList.add('wide');
-  if (id && !sh) return '<a class="back" href="#/shipments">' + icon('back') + 'Shipments</a><h1>Shipment not found</h1><p class="lede">It may have been removed when the demo was reset.</p>';
+  if (id && !sh) return '<a class="back" href="#shipments">' + icon('back') + 'Shipments</a><h1>Shipment not found</h1><p class="lede">It may have been removed when the demo was reset.</p>';
   if (sh && !wide) return detailHtml(sh, true);
   if (wide && S.shipments.length) return '<div class="split"><div>' + listHtml(sh ? sh.id : null) + '</div><div>' + (sh ? detailHtml(sh, false) : '<div class="empty" style="margin-top:64px"><p>Pick a shipment to see its tracking, label and details.</p></div>') + '</div></div>';
   return listHtml(null);
 }
-function trackUrl(sh){ return location.href.split('#')[0] + '#/track/' + encodeURIComponent(sh.awb); }
+function trackUrl(sh){ return location.href.split('#')[0] + '#track-' + sh.awb; }
 function detailHtml(sh, standalone){
   const A = ACCOUNTS[sh.acct];
   const panel = ui.panelFor === sh.id ? ui.panel : null;
@@ -884,7 +1020,7 @@ function detailHtml(sh, standalone){
     canCancel ? '<button class="btn danger-quiet" type="button" data-act="panel" data-p="cancel" data-id="' + sh.id + '" aria-expanded="' + (panel === 'cancel') + '">Cancel shipment</button>' : ''
   ].join('');
   return '<article class="detail">' +
-    (standalone ? '<a class="back" href="#/shipments">' + icon('back') + 'Shipments</a>' : '') +
+    (standalone ? '<a class="back" href="#shipments">' + icon('back') + 'Shipments</a>' : '') +
     (ui.justBooked === sh.id ? bookedBanner(sh) : '') +
     '<header class="d-head"><div><h1 class="d-title">' + esc(sh.customer) + '</h1><p class="hint">' + esc(sh.ref) + ', ' + esc(svcLabel(sh)) + '</p></div>' + pill(sh) + '</header>' +
     (sh.status === 'delivery_failed' ? ndrHtml(sh, panel) : '') +
@@ -910,7 +1046,7 @@ function ndrHtml(sh, panel){
   const A = ACCOUNTS[sh.acct].name;
   if (!sh.awaiting){
     const words = {reattempt:'try delivery again', update:'try again with the new details', rto:'return the parcel to you'}[sh.decision] || 'continue';
-    return '<p class="note d-note">You asked ' + esc(A) + ' to ' + words + '. The next courier update shows the result.</p>';
+    return '<p class="note d-note">' + esc(sh.decidedBy || 'You') + ' asked ' + esc(A) + ' to ' + words + '. The next courier update shows the result.</p>';
   }
   const f = sh.failure || {};
   const body = panel === 'update'
@@ -918,7 +1054,9 @@ function ndrHtml(sh, panel){
         '<div class="d-actions"><button class="btn primary" type="submit">Save and try again</button><button class="btn quiet" type="button" data-act="closePanel">Back</button></div></form>'
     : '<div class="d-actions"><button class="btn primary" type="button" data-act="decide" data-d="reattempt" data-id="' + sh.id + '">Try delivery again</button>' +
         '<button class="btn" type="button" data-act="panel" data-p="update" data-id="' + sh.id + '">Update phone or address</button>' +
-        '<button class="btn" type="button" data-act="decide" data-d="rto" data-id="' + sh.id + '">Return to me</button></div>';
+        (can('returnParcel')
+          ? '<button class="btn" type="button" data-act="decide" data-d="rto" data-id="' + sh.id + '">Return to me</button></div>'
+          : '<button class="btn" type="button" disabled aria-describedby="rtoHint">Return to me</button></div><p class="hint" id="rtoHint">Only the owner can send a parcel back, because return charges are billed to the business.</p>');
   return '<section class="card ndr" aria-labelledby="ndrHead"><h2 id="ndrHead">' + esc(f.reason || 'Delivery failed') + '</h2>' +
     '<p class="hint">Attempt ' + (sh.attempts || 1) + ', ' + fmtWhen(f.at || lastAt(sh)) + '. Tell ' + esc(A) + ' what to do next.</p>' + body + '</section>';
 }
@@ -935,7 +1073,7 @@ function linkPanel(sh){
   return '<div class="panel"><div class="field"><label for="trackLink">Tracking link for ' + esc(first(sh.customer)) + '</label><input id="trackLink" readonly value="' + esc(link) + '"></div>' +
     '<div class="d-actions"><button class="btn primary" type="button" data-act="copy">Copy link</button>' +
     '<a class="btn" href="https://wa.me/91' + esc(sh.phone) + '?text=' + esc(encodeURIComponent(msg)) + '" target="_blank" rel="noopener">Send on WhatsApp</a>' +
-    '<a class="btn quiet" href="#/track/' + encodeURIComponent(sh.awb) + '">Open customer page</a></div>' +
+    '<a class="btn quiet" href="#track-' + sh.awb + '">Open customer page</a></div>' +
     '<p class="fine">Demo: the link opens only in this browser, because demo data is not stored online.</p></div>';
 }
 function cancelPanel(sh){
@@ -968,9 +1106,9 @@ function factsHtml(sh){
     ['Deliver to', esc(sh.address) + (sh.landmark ? '<br>Near ' + esc(sh.landmark) : '') + '<br>' + esc(sh.toPin) + ', ' + esc(areaOf(sh.toPin))],
     ['Mobile', '+91 ' + esc(sh.phone)],
     ['Parcel', esc(fmtKg(sh.kg)) + (sh.dims ? ', ' + esc(sh.dims.join(' × ')) + ' cm' : '') + '<br><span class="hint">Billed as ' + esc(fmtKg(sh.billedKg)) + (sh.bySize ? ' because of its size' : '') + '</span>'],
-    ['Payment', sh.pay === 'cod' ? 'Cash on delivery, collect ' + rupee(sh.value) + (remit ? '<br><span class="hint">' + esc(remit) + '</span>' : '') : 'Prepaid' + (sh.value ? ', order value ' + rupee(sh.value) : '')],
+    ['Payment', sh.pay === 'cod' ? 'Cash on delivery, collect ' + rupee(sh.value) + (remit && can('seeCod') ? '<br><span class="hint">' + esc(remit) + '</span>' : '') : 'Prepaid' + (sh.value ? ', order value ' + rupee(sh.value) : '')],
     ['Shipping cost', rupee(sh.price.total) + ' estimate<br><span class="hint">' + esc(parts.join(', ')) + ', billed by ' + esc(A) + '</span>'],
-    ['Booked', fmtWhen(sh.createdAt)]
+    ['Booked', fmtWhen(sh.createdAt) + (sh.bookedBy ? ', by ' + esc(sh.bookedBy) : '')]
   ];
   return '<dl class="facts">' + rows.map(([k, v]) => '<dt>' + k + '</dt><dd>' + v + '</dd>').join('') + '</dl>';
 }
@@ -1013,28 +1151,32 @@ function labelHtml(sh){
 function couriersView(){
   return '<h1>Couriers</h1>' +
     '<p class="lede">Connect the accounts you already have. Your courier picks up, delivers and bills you directly. Scaleezy never handles the shipping money.</p>' +
+    (can('manageCouriers') ? '' : '<p class="note" style="margin-bottom:16px">Only the account owner can connect or disconnect courier accounts.</p>') +
     '<ul class="acc-list">' + Object.keys(ACCOUNTS).map(k => {
       const A = ACCOUNTS[k], st = S.accounts[k], on = st && st.connected;
       return '<li class="acc"><div><div class="acc-name">' + esc(A.name) + '</div><p class="hint">' + esc(A.kind) + '. ' + esc(A.bills) + '</p>' +
         (on ? '<p class="acc-ok">Connected. Tested ' + esc(fmtWhen(st.at)) + '.</p>' : '') + '</div>' +
-        (on ? '<a class="btn" href="#/couriers/' + k + '">Manage</a>' : '<a class="btn primary" href="#/couriers/' + k + '">Connect</a>') + '</li>';
+        (!can('manageCouriers') ? '<a class="btn" href="#courier-' + k + '">View</a>' : on ? '<a class="btn" href="#courier-' + k + '">Manage</a>' : '<a class="btn primary" href="#courier-' + k + '">Connect</a>') + '</li>';
     }).join('') + '</ul>' +
     '<h2 class="sub">Coming soon</h2>' +
     '<ul class="acc-list">' + COMING.map(c => '<li class="acc"><div><div class="acc-name">' + esc(c.name) + '</div><p class="hint">' + esc(c.line) + '</p></div><span class="pill muted">Coming soon</span></li>').join('') + '</ul>';
 }
 function connectView(k){
   const A = ACCOUNTS[k];
-  if (!A) return '<a class="back" href="#/couriers">' + icon('back') + 'Couriers</a><h1>Courier not found</h1>';
+  if (!A) return '<a class="back" href="#couriers">' + icon('back') + 'Couriers</a><h1>Courier not found</h1>';
   const st = S.accounts[k], cs = ui.connect[k] || {}, p = defaultPickup();
   let body;
-  if (st && st.connected){
+  if (!can('manageCouriers')){
+    body = '<div class="card stack"><p class="note' + (st && st.connected ? ' brand' : '') + '">' + (st && st.connected ? 'Connected. Last tested ' + esc(fmtWhen(st.at)) + '.' : 'Not connected yet.') + '</p>' +
+      '<p class="hint">Only the account owner can connect or disconnect ' + esc(A.name) + '.</p>' + (st && st.connected ? '<div><a class="btn primary" href="#ship">Ship a parcel</a></div>' : '') + '</div>';
+  } else if (st && st.connected){
     body = '<div class="card stack">' +
       '<p class="note brand">' + (cs.justConnected ? 'Connected. ' + esc(cs.pickupMsg || '') : 'Connected. Last tested ' + esc(fmtWhen(st.at)) + '.') + '</p>' +
       '<div class="d-actions"><button class="btn" type="button" data-act="retest" data-k="' + k + '"' + (cs.testing ? ' disabled' : '') + '>' + (cs.testing ? 'Testing connection…' : 'Test again') + '</button>' +
       '<button class="btn danger-quiet" type="button" data-act="askDisconnect" data-k="' + k + '">Disconnect</button></div>' +
       (ui.confirmDisc === k ? '<div class="panel warn"><p><strong>Disconnect ' + esc(A.name) + "?</strong> You won't see its prices when you ship. Existing shipments stay in your list.</p>" +
         '<div class="d-actions"><button class="btn danger" type="button" data-act="disconnect" data-k="' + k + '">Disconnect ' + esc(A.name) + '</button><button class="btn quiet" type="button" data-act="cancelDisconnect">Keep connected</button></div></div>' : '') +
-      '<a class="btn primary" href="#/ship">Ship a parcel</a></div>';
+      '<a class="btn primary" href="#ship">Ship a parcel</a></div>';
   } else {
     body = '<form id="connectForm" class="card stack" data-k="' + k + '" novalidate>' +
       '<p><strong>Where to find it.</strong> <span class="hint">' + esc(A.help) + '</span></p>' +
@@ -1044,8 +1186,8 @@ function connectView(k){
       '<p class="hint">Scaleezy checks the connection by asking ' + esc(A.name) + ' whether it picks up from ' + esc(p ? p.pin : 'your pickup PIN') + '.</p>' +
     '</form>';
   }
-  return '<a class="back" href="#/couriers">' + icon('back') + 'Couriers</a>' +
-    '<h1>' + (st && st.connected ? esc(A.name) : 'Connect ' + esc(A.name)) + '</h1>' +
+  return '<a class="back" href="#couriers">' + icon('back') + 'Couriers</a>' +
+    '<h1>' + ((st && st.connected) || !can('manageCouriers') ? esc(A.name) : 'Connect ' + esc(A.name)) + '</h1>' +
     '<p class="lede">' + esc(A.kind) + '. ' + esc(A.bills) + '</p>' + body;
 }
 function testAccount(k, done){
@@ -1054,7 +1196,10 @@ function testAccount(k, done){
     const p = defaultPickup();
     const svcs = SERVICES.filter(s => s.acct === k);
     const picks = p ? svcs.filter(s => serves(s, p.pin)) : [];
+    const was = S.accounts[k] && S.accounts[k].connected;
     S.accounts[k] = {connected:true, at:Date.now()};
+    logCall(k, 'Test connection');
+    if (!was) audit(ACCOUNTS[k].name + ' connected');
     save();
     ui.connect[k] = {justConnected:true, pickupMsg: !p ? '' : picks.length ? ACCOUNTS[k].name + ' picks up from ' + p.pin + '.' : ACCOUNTS[k].name + " doesn't pick up from " + p.pin + ' yet, so it won’t show prices for that address.'};
     done();
@@ -1070,6 +1215,20 @@ function pickupFormHtml(p){
     field('pPin', 'PIN code', 'text', p.pin || '', {inputmode:'numeric', maxlength:6}) +
     '<div class="d-actions"><button class="btn primary" type="submit">Save address</button><button class="btn quiet" type="button" data-act="cancelPickup">Cancel</button></div></form>';
 }
+function teamHtml(){
+  return '<section class="card stack"><h2>Team</h2>' +
+    '<ul class="pickups">' + S.team.map(m =>
+      '<li><span class="pk-top">' + esc(m.name) + ' <span class="pill">' + (m.role === 'owner' ? 'Owner' : 'Staff') + '</span>' + (m.status === 'invited' ? ' <span class="pill amber">Invited</span>' : '') + '</span>' +
+      '<span class="hint">' + (m.phone ? 'Mobile ' + esc(m.phone) : 'No mobile number added') + '</span>' +
+      (m.role === 'staff' ? (ui.confirmRemove === m.id
+        ? '<div class="panel warn"><p><strong>Remove ' + esc(m.name) + "?</strong> They won't be able to sign in. Shipments they booked stay in your list.</p><div class=\"d-actions\"><button class=\"btn danger\" type=\"button\" data-act=\"removeMember\" data-id=\"" + m.id + '">Remove ' + esc(first(m.name)) + '</button><button class="btn quiet" type="button" data-act="cancelRemove">Keep</button></div></div>'
+        : '<span class="d-actions"><button class="btn danger-quiet" type="button" data-act="askRemove" data-id="' + m.id + '">Remove</button></span>') : '') + '</li>').join('') + '</ul>' +
+    (ui.invite
+      ? '<form id="inviteForm" class="panel" novalidate><h3>Add staff</h3>' + field('mName', 'Name', 'text', '', {autocomplete:'off'}) + field('mPhone', 'Mobile number', 'tel', '', {inputmode:'tel', autocomplete:'off'}, 'In the live product they get an invite to sign in.') +
+        '<div class="d-actions"><button class="btn primary" type="submit">Send invite</button><button class="btn quiet" type="button" data-act="cancelInvite">Cancel</button></div></form>'
+      : '<div><button class="btn" type="button" data-act="invite">Add staff</button></div>') +
+    "<p class=\"hint\">Staff can book, print labels, schedule pickups and track. They can't change couriers, settings or the team, send parcels back, or see cash that couriers owe you.</p></section>";
+}
 function settingsView(){
   const b = S.business;
   const editing = ui.editPickup;
@@ -1077,6 +1236,7 @@ function settingsView(){
     '<form id="bizForm" class="card stack" novalidate><h2>Business</h2>' + field('bizName', 'Business name', 'text', b.name) +
       field('gstin', 'GSTIN (optional)', 'text', b.gstin, {autocapitalize:'characters', maxlength:15, autocomplete:'off'}, 'Printed on your labels.') +
       '<div><button class="btn" type="submit">Save changes</button></div></form>' +
+    teamHtml() +
     '<section class="card stack"><h2>Pickup addresses</h2><ul class="pickups">' + S.pickups.map(p =>
       '<li><span class="pk-top">' + esc(p.name) + (p.isDefault ? ' <span class="pill">Default</span>' : '') + '</span>' +
       '<span class="hint">' + esc(p.address) + ', ' + esc(p.pin) + '. Ask for ' + esc(p.contact) + ', ' + esc(p.phone) + '.</span>' +
@@ -1098,7 +1258,7 @@ function settingsView(){
 /* ---------- views: customer tracking page ---------- */
 function trackView(awb){
   const sh = S.shipments.find(x => x.awb === awb);
-  const mark = '<a class="wordmark" href="#/shipments"><span class="wm">scale<b>ezy</b></span><span class="wm-sub">Tracking</span></a>';
+  const mark = '<a class="wordmark" href="#shipments"><span class="wm">scale<b>ezy</b></span><span class="wm-sub">Tracking</span></a>';
   if (!sh) return '<div class="track">' + mark + "<h1>We couldn't find that tracking number</h1><p class=\"lede\" style=\"margin:0\">Check the link, or ask the seller to send it again.</p></div>";
   const done = TERMINAL.includes(sh.status);
   return '<div class="track">' + mark +
@@ -1108,44 +1268,196 @@ function trackView(awb){
     (sh.status === 'delivery_failed' ? '<p class="note amber">' + esc(sh.courier) + ' tried to deliver but couldn’t. The seller is arranging the next step.</p>' : '') +
     '<div class="card"><dl class="facts"><dt>Courier</dt><dd>' + esc(sh.courier) + '</dd><dt>Tracking number</dt><dd>' + esc(sh.awb) + '</dd><dt>Order</dt><dd>' + esc(sh.ref) + '</dd><dt>Delivering to</dt><dd>' + esc(placeOf(sh.toPin)) + ' ' + esc(sh.toPin) + '</dd></dl></div>' +
     '<section><h2>Updates</h2>' + timelineHtml(sh, true) + '</section>' +
-    '<p class="fine">Demo page. In the live product anyone with the link can open it. <a href="#/shipments/' + encodeURIComponent(sh.id) + '">Back to Scaleezy</a></p>' +
+    '<p class="fine">Demo page. In the live product anyone with the link can open it. <a href="#shipment-' + sh.id + '">Back to Scaleezy</a></p>' +
   '</div>';
 }
 
 /* ---------- router ---------- */
 const view = $('#view');
 let lastKey = null;
-function parts(){ return (location.hash.replace(/^#\/?/, '') || 'ship').split('/').filter(Boolean).map(p => { try { return decodeURIComponent(p); } catch (e) { return p; } }); }
-function setNav(r){
-  const action = S.shipments.filter(sh => groupOf(sh) === 'action').length;
-  const item = ([k, label, ic]) => '<a class="CLS" href="#/' + k + '"' + (r === k ? ' aria-current="page"' : '') + '>' + icon(ic) + '<span>' + label + '</span>' + (k === 'shipments' && action ? '<span class="count" aria-label="' + action + ' need action">' + action + '</span>' : '') + '</a>';
-  $('#tabNav').innerHTML = NAV.map(n => item(n).replace('CLS', 'tab')).join('');
-  $('#railNav').innerHTML = NAV.map(n => item(n).replace('CLS', 'nav')).join('');
-  $('#railFoot').innerHTML = S.business ? '<strong>' + esc(S.business.name) + '</strong>Demo: couriers are simulated and data stays in this browser.' : '';
+function parts(){
+  const h = location.hash.replace(/^#/, '');
+  const after = p => h.startsWith(p) ? h.slice(p.length) : null;
+  let x;
+  if (!h) return S.role === 'admin' ? ['admin', 'overview'] : ['ship'];
+  if ((x = after('shipment-')) !== null) return ['shipments', x];
+  if ((x = after('courier-')) !== null) return ['couriers', x];
+  if ((x = after('track-')) !== null) return ['track', x];
+  if ((x = after('admin-seller-')) !== null) return ['admin', 'seller', x];
+  if (h === 'admin') return ['admin', 'overview'];
+  if (['admin-sellers','admin-couriers','admin-activity'].includes(h)) return ['admin', h.slice(6)];
+  if (h === 'business') return ['settings'];
+  if (h === 'welcome') return ['setup'];
+  return [h];
 }
+const homeHash = () => S.role === 'admin' ? '#admin' : '#ship';
+function go(hash){ if (location.hash === hash) render(); else location.hash = hash; }
+function navKey(r, a){
+  if (r === 'admin') return a === 'overview' ? 'admin' : 'admin-' + (a === 'seller' ? 'sellers' : a);
+  if (r === 'settings') return 'business';
+  return r;
+}
+function setNav(r, a){
+  const cur = navKey(r, a), items = NAVS[S.role] || NAVS.owner;
+  const action = S.role === 'admin' ? 0 : S.shipments.filter(sh => groupOf(sh) === 'action').length;
+  const item = ([h, label, ic], cls) => '<a class="' + cls + '" href="#' + h + '"' + (cur === h ? ' aria-current="page"' : '') + '>' + icon(ic) + '<span>' + label + '</span>' +
+    (h === 'shipments' && action ? '<span class="count" aria-label="' + action + ' need action">' + action + '</span>' : '') + '</a>';
+  const tab = $('#tabNav');
+  tab.style.setProperty('--tabs', items.length);
+  tab.innerHTML = items.map(i => item(i, 'tab')).join('');
+  $('#railNav').innerHTML = items.map(i => item(i, 'nav')).join('');
+  const sel = id => '<select id="' + id + '" data-role-sel aria-label="View the demo as">' + ROLES.map(([v, l]) => '<option value="' + v + '"' + (S.role === v ? ' selected' : '') + '>' + l + '</option>').join('') + '</select>' + icon('chev');
+  $('#roleTop').innerHTML = sel('roleSelTop');
+  $('#roleRail').innerHTML = sel('roleSelRail');
+  const u = currentUser();
+  $('#railFoot').innerHTML = !S.business ? '' : S.role === 'admin'
+    ? '<strong>Scaleezy team</strong>Admin console. Customer details stay hidden.'
+    : '<strong>' + esc(S.business.name) + '</strong>' + esc(u.name) + ', ' + (S.role === 'owner' ? 'owner' : 'staff') + '. Couriers are simulated and data stays in this browser.';
+}
+function setRole(v){
+  if (v === 'staff' && !S.team.some(m => m.role === 'staff')){
+    const [r, a] = parts(); setNav(r, a);
+    toast(S.role === 'owner' ? 'Add a staff member in Settings first' : 'Add a staff member as the owner first');
+    return;
+  }
+  S.role = v; save();
+  Object.assign(ui, {panel:null, panelFor:null, quotes:null, pick:null, filter:'all', q:'', justBooked:null, confirmSeller:null, invite:false});
+  const u = currentUser();
+  toast(v === 'admin' ? 'Viewing as Scaleezy admin' : 'Viewing as ' + u.name + ', ' + (v === 'owner' ? 'owner' : 'staff'));
+  const [r] = parts();
+  const keep = v !== 'admin' && r !== 'admin' && !(r === 'settings' && v === 'staff');
+  if (keep) render(); else go(homeHash());
+}
+
+/* ---------- views: admin console ---------- */
+const kpi = (label, value, small) => '<div class="kpi"><span>' + esc(label) + '</span><strong>' + esc(value) + '</strong><small>' + esc(small) + '</small></div>';
+function logRows(entries){
+  if (!entries.length) return '<p class="note">No courier calls yet.</p>';
+  return '<ul class="rows">' + entries.map(l =>
+    '<li><div class="row"><span class="row-top"><span class="row-name">' + esc(ACCOUNTS[l.acct].name) + ': ' + esc(l.call) + '</span><span class="pill ' + (l.code >= 400 ? 'red' : 'green') + '">' + l.code + ' ' + esc(CODE_TXT[l.code] || '') + '</span></span>' +
+    '<span class="row-sub">' + esc(sellerName(l.org)) + (l.org === 'demo' ? ' (this demo)' : '') + '</span>' +
+    '<span class="row-when">' + fmtWhen(l.at) + ', ' + (l.dir === 'in' ? 'courier to Scaleezy' : 'Scaleezy to courier') + ', ' + fmtMs(l.ms) + '</span></div></li>').join('') + '</ul>';
+}
+function auditRows(list, withSeller){
+  if (!list.length) return '<p class="hint">No recorded actions yet.</p>';
+  return '<ol class="tl">' + list.map((a, i) => '<li' + (i === 0 ? ' class="now"' : '') + '><span class="tl-status">' + esc(a.action) + '</span><span class="tl-when">' + fmtWhen(a.at) + ', by ' + esc(a.actor) + (withSeller ? ', ' + esc(sellerName(a.org)) : '') + '</span></li>').join('') + '</ol>';
+}
+function adminOverview(){
+  const list = sellers(), live = list.filter(s => s.status !== 'suspended');
+  const month = list.reduce((n, s) => n + s.month, 0);
+  const hs = Object.keys(ACCOUNTS).map(k => [k, health(k)]);
+  const fails = hs.reduce((n, [, h]) => n + h.fails, 0), degraded = hs.filter(([, h]) => h.degraded);
+  const att = [];
+  degraded.forEach(([k, h]) => att.push({href:'#admin-couriers', title: ACCOUNTS[k].name + ' calls are failing', sub: h.fails + ' of ' + h.calls.toLocaleString('en-IN') + ' calls failed in the last 24 hours, mostly timeouts.', pill:'Degraded', tone:'amber'}));
+  list.filter(s => s.status === 'suspended').forEach(s => att.push({href:'#admin-seller-' + s.id, title: s.name + ' is suspended', sub: s.reason || 'Suspended by an admin.', pill:'Suspended', tone:'red'}));
+  list.filter(s => s.status === 'trial').forEach(s => att.push({href:'#admin-seller-' + s.id, title: s.name + "'s trial ends " + fmtDay(s.joinedAt + 14 * DAY), sub: s.month + ' shipments so far this month.', pill:'Trial', tone:'blue'}));
+  const recent = [...S.apiLog, ...SEED_LOG].sort((a, b) => b.at - a.at).slice(0, 5);
+  return '<h1>Scaleezy admin</h1>' +
+    '<p class="lede">One seller is the demo business in this browser. The other five are made-up example sellers.</p>' +
+    '<div class="kpis">' + kpi('Active sellers', live.length, 'of ' + list.length + ' signed up') + kpi('Shipments this month', month.toLocaleString('en-IN'), 'across all sellers') +
+      kpi('Failed courier calls', fails, 'last 24 hours') + kpi('Courier connections', (hs.length - degraded.length) + ' of ' + hs.length, 'working normally') + '</div>' +
+    '<h2 style="margin-bottom:10px">Needs attention</h2>' +
+    (att.length ? '<ul class="rows">' + att.map(a => '<li><a class="row" href="' + a.href + '"><span class="row-top"><span class="row-name">' + esc(a.title) + '</span><span class="pill ' + a.tone + '">' + a.pill + '</span></span><span class="row-sub">' + esc(a.sub) + '</span></a></li>').join('') + '</ul>' : '<p class="note">Nothing needs attention.</p>') +
+    '<div class="sec-head"><h2>Recent courier calls</h2><a class="btn quiet" href="#admin-activity">Open call log</a></div>' + logRows(recent);
+}
+function sellerRows(){
+  const f = ui.sFilter, q = ui.sq.trim().toLowerCase();
+  const shown = sellers().filter(s => (f === 'all' || s.status === f) && (!q || (s.name + ' ' + s.city).toLowerCase().includes(q)));
+  if (!shown.length) return '<div class="empty"><p>No sellers match.</p><button class="btn" type="button" data-act="sFilter" data-f="all">Show all sellers</button></div>';
+  return '<ul class="rows">' + shown.map(s => '<li><a class="row" href="#admin-seller-' + s.id + '"><span class="row-top"><span class="row-name">' + esc(s.name) + '</span><span class="pill ' + SELLER_ST[s.status].tone + '">' + SELLER_ST[s.status].label + '</span></span>' +
+    '<span class="row-sub">' + esc(s.city) + ', ' + esc(s.plan) + ', ' + s.couriers.length + (s.couriers.length === 1 ? ' courier' : ' couriers') + (s.demo ? ', this demo' : '') + '</span>' +
+    '<span class="row-when">' + s.month.toLocaleString('en-IN') + ' shipments this month, last active ' + esc(ago(s.lastAt)) + '</span></a></li>').join('') + '</ul>';
+}
+function adminSellers(){
+  const list = sellers(), counts = {all:list.length, active:0, trial:0, suspended:0};
+  list.forEach(s => { counts[s.status]++; });
+  return '<h1 style="margin-bottom:16px">Sellers</h1><div class="list-tools">' +
+    '<label class="sr-only" for="sellerSearch">Search sellers</label><input id="sellerSearch" type="search" value="' + esc(ui.sq) + '" placeholder="Business name or city" autocomplete="off">' +
+    '<div class="chips" role="group" aria-label="Filter sellers">' + [['all','All'],['active','Active'],['trial','Trial'],['suspended','Suspended']].map(([k, l]) => '<button type="button" class="chip" data-act="sFilter" data-f="' + k + '" aria-pressed="' + (ui.sFilter === k) + '">' + l + '<small>' + counts[k] + '</small></button>').join('') + '</div></div>' +
+    '<div id="sellerRows">' + sellerRows() + '</div>';
+}
+function adminSeller(id){
+  const s = sellers().find(x => x.id === id);
+  const back = '<a class="back" href="#admin-sellers">' + icon('back') + 'Sellers</a>';
+  if (!s) return back + '<h1>Seller not found</h1>';
+  const st = SELLER_ST[s.status], confirm = ui.confirmSeller === s.id;
+  let byStatus = '';
+  if (s.demo){ const c = {}; S.shipments.forEach(sh => { const g = groupOf(sh); c[g] = (c[g] || 0) + 1; }); byStatus = FILTERS.filter(([k]) => k !== 'all' && c[k]).map(([k, l]) => l + ' ' + c[k]).join(', '); }
+  const calls = [...S.apiLog, ...SEED_LOG].filter(l => l.org === s.id).sort((a, b) => b.at - a.at).slice(0, 5);
+  return back +
+    '<header class="d-head"><div><h1 class="d-title">' + esc(s.name) + '</h1><p class="hint">' + esc(s.city) + (s.demo ? ', the demo business in this browser' : ', example seller') + '</p></div><span class="pill ' + st.tone + '">' + st.label + '</span></header>' +
+    (s.status === 'suspended' ? '<p class="note red d-note">Suspended' + (s.reason ? ': ' + esc(s.reason.toLowerCase()) : '') + ". They can still track parcels but can't book new shipments.</p>" : '') +
+    '<div class="d-actions">' + (s.status === 'suspended'
+      ? '<button class="btn primary" type="button" data-act="reactivate" data-id="' + s.id + '">Reactivate seller</button>'
+      : '<button class="btn danger-quiet" type="button" data-act="askSuspend" data-id="' + s.id + '" aria-expanded="' + confirm + '">Suspend seller</button>') +
+      '<button class="btn" type="button" data-act="supportAccess" data-id="' + s.id + '">Request support access</button></div>' +
+    (confirm ? '<form id="suspendForm" class="panel warn" data-id="' + s.id + '" novalidate><p><strong>Suspend ' + esc(s.name) + "?</strong> They keep tracking existing parcels but can't book new shipments until you reactivate them.</p>" +
+      '<div class="field"><label for="f-reason">Reason</label><select id="f-reason" name="reason"><option>Payment overdue</option><option>Courier raised a complaint</option><option>Seller asked to pause</option></select></div>' +
+      '<div class="d-actions"><button class="btn danger" type="submit">Suspend seller</button><button class="btn quiet" type="button" data-act="cancelSuspend">Keep active</button></div></form>' : '') +
+    '<section class="d-sec"><h2>Account</h2><dl class="facts">' +
+      '<dt>Plan</dt><dd>' + esc(s.plan) + '</dd><dt>Joined</dt><dd>' + fmtDay(s.joinedAt) + '</dd>' +
+      '<dt>Team</dt><dd>' + s.team + (s.team === 1 ? ' person' : ' people') + '</dd>' +
+      '<dt>Couriers</dt><dd>' + (s.couriers.length ? esc(s.couriers.map(k => ACCOUNTS[k].name).join(', ')) : 'None connected') + '</dd>' +
+      '<dt>Shipments this month</dt><dd>' + s.month.toLocaleString('en-IN') + (byStatus ? '<br><span class="hint">' + esc(byStatus) + '</span>' : '') + '</dd>' +
+      '<dt>Last active</dt><dd>' + esc(ago(s.lastAt)) + '</dd></dl></section>' +
+    "<p class=\"note\" style=\"margin-top:22px\">Customer names, addresses and phone numbers are hidden here. Support access needs the seller's approval and is logged.</p>" +
+    '<section class="d-sec"><h2>Recent courier calls</h2>' + logRows(calls) + '</section>' +
+    '<section class="d-sec"><h2>Audit log</h2>' + auditRows(S.audit.filter(a => a.org === s.id), false) + '</section>';
+}
+function adminCouriers(){
+  return '<h1>Courier health</h1><p class="lede">Each courier connection over the last 24 hours, across all sellers. Figures are simulated in this demo.</p>' +
+    '<ul class="acc-list">' + Object.keys(ACCOUNTS).map(k => {
+      const h = health(k);
+      return '<li class="acc health"><div class="stack"><div class="row-top"><span class="acc-name">' + esc(ACCOUNTS[k].name) + '</span><span class="pill ' + (h.degraded ? 'amber' : 'green') + '">' + (h.degraded ? 'Degraded' : 'Working normally') + '</span></div>' +
+        '<p class="hint">' + h.rate.toFixed(1) + '% of ' + h.calls.toLocaleString('en-IN') + ' calls succeeded. Typical response ' + fmtMs(h.ms) + '. Used by ' + h.sellers + (h.sellers === 1 ? ' seller.' : ' sellers.') + '</p>' +
+        '<p class="hint">' + (h.lastErr ? 'Latest error: ' + h.lastErr.code + ' ' + esc(CODE_TXT[h.lastErr.code] || '') + ' on ' + esc(h.lastErr.call.toLowerCase()) + ', ' + fmtWhen(h.lastErr.at) + ', ' + esc(sellerName(h.lastErr.org)) + '.' : 'No errors in the last 24 hours.') + '</p></div></li>';
+    }).join('') + '</ul><p class="fine" style="margin-top:12px">A connection shows as degraded when fewer than 97% of its calls succeed.</p>';
+}
+function adminActivity(){
+  const f = ui.logFilter;
+  const all = [...S.apiLog, ...SEED_LOG].sort((a, b) => b.at - a.at);
+  const shown = all.filter(l => f === 'all' || (f === 'errors' ? l.code >= 400 : l.acct === f));
+  const chips = [['all','All'],['errors','Errors'], ...Object.keys(ACCOUNTS).map(k => [k, ACCOUNTS[k].name])];
+  return '<h1>Call log</h1><p class="lede">Every call Scaleezy makes to a courier and every update it receives. Customer details are removed before anything is logged.</p>' +
+    '<div class="chips" role="group" aria-label="Filter calls" style="margin-bottom:12px">' + chips.map(([k, l]) => '<button type="button" class="chip' + (k === 'errors' ? ' warn' : '') + '" data-act="logFilter" data-f="' + k + '" aria-pressed="' + (f === k) + '">' + esc(l) + '</button>').join('') + '</div>' +
+    logRows(shown.slice(0, 40)) +
+    '<h2 class="sub">Audit log</h2>' + auditRows(S.audit.slice(0, 20), true);
+}
+function adminView(a, b){
+  view.classList.add('wide');
+  if (a === 'sellers') return adminSellers();
+  if (a === 'seller') return adminSeller(b);
+  if (a === 'couriers') return adminCouriers();
+  if (a === 'activity') return adminActivity();
+  return adminOverview();
+}
+const noAccess = (title, line) => '<h1>' + esc(title) + '</h1><p class="lede">' + esc(line) + '</p><a class="btn" href="#ship">Ship a parcel</a>';
+
 function render(){
-  const [r, a] = parts();
-  const key = r + '/' + (a || '');
+  const [r, a, b] = parts();
+  const key = [r, a, b].filter(Boolean).join('/');
   const changed = key !== lastKey; lastKey = key;
-  if (changed){ ui.panel = null; ui.panelFor = null; ui.confirmDisc = null; ui.confirmReset = false; if (!(r === 'shipments' && a === ui.justBooked)) ui.justBooked = null; }
+  if (changed){ ui.panel = null; ui.panelFor = null; ui.confirmDisc = null; ui.confirmReset = false; ui.confirmRemove = null; ui.confirmSeller = null; if (!(r === 'shipments' && a === ui.justBooked)) ui.justBooked = null; }
   document.body.classList.toggle('bare', r === 'track' || r === 'setup');
   view.className = '';
   let html;
   if (r === 'track'){ html = trackView(a); }
-  else if (!S.business && r !== 'setup'){ location.replace('#/setup'); return; }
-  else if (S.business && r === 'setup'){ location.replace('#/ship'); return; }
+  else if (!S.business && r !== 'setup'){ location.replace('#welcome'); return; }
+  else if (S.business && r === 'setup'){ location.replace(homeHash()); return; }
+  else if (S.role === 'admin' && r !== 'admin'){ location.replace('#admin'); return; }
+  else if (S.role !== 'admin' && r === 'admin'){ location.replace('#ship'); return; }
   else {
-    setNav(r);
+    setNav(r, a);
     if (r === 'setup') html = setupView();
+    else if (r === 'admin') html = adminView(a, b);
     else if (r === 'ship') html = shipView();
     else if (r === 'shipments') html = shipmentsView(a);
     else if (r === 'couriers') html = a ? connectView(a) : couriersView();
-    else if (r === 'settings') html = settingsView();
-    else { location.replace('#/ship'); return; }
+    else if (r === 'settings') html = can('editBusiness') ? settingsView() : noAccess('Settings', 'Only the account owner can change business details, pickup addresses and the team.');
+    else { location.replace(homeHash()); return; }
   }
   view.innerHTML = html;
-  document.title = r === 'track' ? 'Track your order' : 'Scaleezy Logistics';
-  if (changed){
+    if (changed){
     window.scrollTo(0, 0);
     const h = view.querySelector('h1');
     if (h && lastKey !== null){ h.setAttribute('tabindex', '-1'); h.focus({preventScroll:true}); }
@@ -1155,11 +1467,11 @@ function rerender(focusSel){ render(); if (focusSel){ const el = $(focusSel); if
 
 /* ---------- actions ---------- */
 const ACT = {
-  sample(){ loadSampleSetup(); toast('Sample boutique loaded'); location.hash = '#/shipments'; },
-  sampleShipments(){ addSamples(); save(); toast('Sample shipments added'); location.hash = '#/shipments'; },
+  sample(){ loadSampleSetup(); toast('Sample boutique loaded'); location.hash = '#shipments'; },
+  sampleShipments(){ addSamples(); save(); toast('Sample shipments added'); location.hash = '#shipments'; },
   askReset(){ ui.confirmReset = true; rerender('[data-act=reset]'); },
   cancelReset(){ ui.confirmReset = false; rerender('[data-act=askReset]'); },
-  reset(){ S = blank(); memory = null; try { localStorage.removeItem(KEY); } catch (e) {} Object.assign(ui, {draft:null, quotes:null, pick:null, bookDraft:{}, filter:'all', q:'', justBooked:null, connect:{}, confirmReset:false, editPickup:null}); toast('Demo reset'); location.hash = '#/setup'; },
+  reset(){ S = blank(); memory = null; try { localStorage.removeItem(KEY); } catch (e) {} Object.assign(ui, {draft:null, quotes:null, pick:null, bookDraft:{}, filter:'all', q:'', justBooked:null, connect:{}, confirmReset:false, editPickup:null}); toast('Demo reset'); location.hash = '#welcome'; },
   preset(t){
     const pr = PRESETS.find(p => p.id === t.dataset.id), d = ui.draft, f = $('#shipForm');
     Object.assign(d, {preset:pr.id, kg:String(pr.kg), l:String(pr.l), b:String(pr.b), h:String(pr.h)});
@@ -1189,16 +1501,31 @@ const ACT = {
     $('#printArea').innerHTML = labelHtml(sh);
     setTimeout(() => { try { window.print(); } catch (e) { toast("Printing isn't available in this window"); } }, 60);
   },
-  cancel(t){ const sh = byId(t.dataset.id); addEvent(sh, 'cancelled', Math.max(Date.now(), lastAt(sh) + 1000), 'Cancelled by you'); sh.remit = 'na'; save(); ui.panel = null; rerender(); toast('Shipment cancelled'); },
-  decide(t){ const sh = byId(t.dataset.id); decide(sh, t.dataset.d); save(); ui.panel = null; rerender(); toast('Sent to ' + ACCOUNTS[sh.acct].name); },
-  advance(t){ const sh = byId(t.dataset.id); const err = advance(sh); if (err){ toast(err); return; } save(); rerender('[data-act=advance][data-id="' + sh.id + '"]'); toast('Courier update: ' + ST[sh.status].label); },
-  fail(t){ const sh = byId(t.dataset.id); failDelivery(sh); save(); rerender('#ndrHead'); toast('Courier update: Delivery failed'); },
-  lose(t){ const sh = byId(t.dataset.id); addEvent(sh, 'lost', Math.max(Date.now(), lastAt(sh) + 1000)); sh.remit = 'na'; save(); rerender(); toast('Courier update: Lost or damaged'); },
+  cancel(t){ const sh = byId(t.dataset.id); addEvent(sh, 'cancelled', Math.max(Date.now(), lastAt(sh) + 1000), 'Cancelled by ' + currentUser().name); sh.remit = 'na'; logCall(sh.acct, 'Cancel shipment'); save(); ui.panel = null; rerender(); toast('Shipment cancelled'); },
+  decide(t){
+    const sh = byId(t.dataset.id);
+    if (t.dataset.d === 'rto' && !can('returnParcel')){ toast('Only the owner can send a parcel back'); return; }
+    decide(sh, t.dataset.d); save(); ui.panel = null; rerender(); toast('Sent to ' + ACCOUNTS[sh.acct].name);
+  },
+  advance(t){ const sh = byId(t.dataset.id); const err = advance(sh); if (err){ toast(err); return; } logCall(sh.acct, 'Tracking update received', {dir:'in'}); save(); rerender('[data-act=advance][data-id="' + sh.id + '"]'); toast('Courier update: ' + ST[sh.status].label); },
+  fail(t){ const sh = byId(t.dataset.id); failDelivery(sh); logCall(sh.acct, 'Tracking update received', {dir:'in'}); save(); rerender('#ndrHead'); toast('Courier update: Delivery failed'); },
+  lose(t){ const sh = byId(t.dataset.id); addEvent(sh, 'lost', Math.max(Date.now(), lastAt(sh) + 1000)); sh.remit = 'na'; logCall(sh.acct, 'Tracking update received', {dir:'in'}); save(); rerender(); toast('Courier update: Lost or damaged'); },
+  invite(){ ui.invite = true; rerender('#f-mName'); },
+  cancelInvite(){ ui.invite = false; rerender('[data-act=invite]'); },
+  askRemove(t){ ui.confirmRemove = t.dataset.id; rerender('[data-act=removeMember]'); },
+  cancelRemove(){ ui.confirmRemove = null; rerender(); },
+  removeMember(t){ const m = S.team.find(x => x.id === t.dataset.id); if (!m) return; S.team = S.team.filter(x => x !== m); audit('Removed ' + m.name + ' from the team'); ui.confirmRemove = null; save(); rerender(); toast(m.name + ' removed'); },
+  sFilter(t){ ui.sFilter = t.dataset.f; rerender('[data-act=sFilter][data-f="' + ui.sFilter + '"]'); },
+  logFilter(t){ ui.logFilter = t.dataset.f; rerender('[data-act=logFilter][data-f="' + ui.logFilter + '"]'); },
+  askSuspend(t){ ui.confirmSeller = t.dataset.id; rerender('#f-reason'); },
+  cancelSuspend(){ ui.confirmSeller = null; rerender(); },
+  reactivate(t){ const id = t.dataset.id; setSellerStatus(id, 'active'); audit('Reactivated the seller', id); save(); rerender(); toast(sellerName(id) + ' reactivated'); },
+  supportAccess(t){ const id = t.dataset.id; audit('Requested support access', id); save(); rerender(); toast('Request sent. The seller has to approve it.'); },
   remit(t){ const sh = byId(t.dataset.id); sh.remit = 'remitted'; sh.remitAt = Date.now(); save(); rerender(); toast('Marked as paid out'); },
   retest(t){ const k = t.dataset.k; testAccount(k, () => rerender()); rerender(); },
   askDisconnect(t){ ui.confirmDisc = t.dataset.k; rerender('[data-act=disconnect]'); },
   cancelDisconnect(){ ui.confirmDisc = null; rerender(); },
-  disconnect(t){ const k = t.dataset.k; delete S.accounts[k]; ui.connect[k] = {}; ui.confirmDisc = null; save(); toast(ACCOUNTS[k].name + ' disconnected'); location.hash = '#/couriers'; },
+  disconnect(t){ const k = t.dataset.k; delete S.accounts[k]; ui.connect[k] = {}; ui.confirmDisc = null; audit(ACCOUNTS[k].name + ' disconnected'); save(); toast(ACCOUNTS[k].name + ' disconnected'); location.hash = '#couriers'; },
   defaultPickup(t){ S.pickups.forEach(p => { p.isDefault = p.id === t.dataset.id; }); ui.draft = null; save(); rerender(); toast('Default pickup address changed'); },
   editPickup(t){ ui.editPickup = t.dataset.id; rerender('#f-pName'); },
   cancelPickup(){ ui.editPickup = null; rerender(); },
@@ -1216,12 +1543,16 @@ const FORMS = {
     const d = vals(f); clearErrs(f);
     const e = {};
     if (!d.bizName.trim()) e.bizName = 'Enter your business name.';
+    if (!d.ownerName.trim()) e.ownerName = 'Enter your name.';
     const g = V.gstin(d.gstin.trim().toUpperCase()); if (g) e.gstin = g;
     Object.assign(e, pickupErrors(d));
     if (!showErrs(f, e)) return;
     S.business = {name:d.bizName.trim(), gstin:d.gstin.trim().toUpperCase()};
     S.pickups = [{id:'p' + uid(), name:d.pName.trim(), contact:d.pContact.trim(), phone:d.pPhone.trim(), address:d.pAddress.trim(), pin:d.pPin.trim(), isDefault:true}];
-    save(); toast('Business saved'); location.hash = '#/couriers';
+    S.team = [{id:'u' + uid(), name:d.ownerName.trim(), phone:d.pPhone.trim(), role:'owner', status:'active'}];
+    S.role = 'owner'; S.createdAt = Date.now();
+    audit('Business set up');
+    save(); toast('Business saved'); location.hash = '#couriers';
   },
   shipForm(f){
     const d = ui.draft; clearErrs(f);
@@ -1233,14 +1564,18 @@ const FORMS = {
     const val = parseFloat(d.value);
     if (d.pay === 'cod' && !(val >= 1)) e.value = 'Enter the amount the courier should collect.';
     else if (String(d.value).trim() && !(val >= 0)) e.value = 'Enter the order value in rupees.';
+    if (S.suspended){ toast('Your account is suspended, so you can’t book new shipments'); return; }
     if (e.toPin){ const m = $('#toMeta'); m.textContent = e.toPin; m.classList.add('bad'); }
     if (!showErrs(f, e)) return;
     ui.quotes = computeQuotes(); ui.pick = null; ui.sort = 'cheap';
+    Object.keys(ACCOUNTS).filter(k => S.accounts[k] && S.accounts[k].connected).forEach(k => logCall(k, 'Check PIN coverage and rates'));
+    save();
     $('#results').innerHTML = resultsHtml(); $('#bookArea').innerHTML = '';
     $('#results').scrollIntoView({behavior: reduceMotion() ? 'auto' : 'smooth', block:'start'});
     $('#resHead').focus({preventScroll:true});
   },
   bookForm(f){
+    if (S.suspended){ toast('Your account is suspended, so you can’t book new shipments'); return; }
     const d = vals(f); clearErrs(f);
     const e = {};
     if (d.cName.trim().length < 2) e.cName = "Enter the customer's name.";
@@ -1250,13 +1585,15 @@ const FORMS = {
     if (!showErrs(f, e)) return;
     const Q = ui.quotes, dd = ui.draft, p = S.pickups.find(x => x.id === Q.pickupId);
     const sh = makeShipment({svcId:ui.pick, pickup:p, toPin:Q.to, customer:d.cName.trim(), phone:d.cPhone.trim(), address:d.cAddress.trim(), landmark:d.cLandmark.trim(), ref:d.ref.trim(), kg:+dd.kg, l:+dd.l || 0, b:+dd.b || 0, h:+dd.h || 0, pay:Q.pay, value:Q.value});
+    logCall(sh.acct, 'Create shipment'); logCall(sh.acct, 'Generate label');
     S.shipments.unshift(sh); save();
     ui.quotes = null; ui.pick = null; ui.bookDraft = {}; ui.draft = freshDraft(); ui.justBooked = sh.id;
-    location.hash = '#/shipments/' + encodeURIComponent(sh.id);
+    location.hash = '#shipment-' + sh.id;
   },
   pickupForm(f){
     const sh = byId(f.dataset.id); const ms = +new FormData(f).get('pday');
     sh.pickupDate = ms; addEvent(sh, 'pickup_scheduled', Math.max(Date.now(), lastAt(sh) + 1000), 'Pickup on ' + fmtDay(ms));
+    logCall(sh.acct, 'Request pickup');
     save(); ui.panel = null; rerender(); toast('Pickup scheduled for ' + fmtDay(ms));
   },
   updForm(f){
@@ -1293,6 +1630,22 @@ const FORMS = {
     const existing = S.pickups.find(p => p.id === f.dataset.id);
     if (existing) Object.assign(existing, data); else S.pickups.push({id:'p' + uid(), isDefault: !S.pickups.length, ...data});
     ui.editPickup = null; ui.draft = null; save(); rerender(); toast('Address saved');
+  },
+  inviteForm(f){
+    const d = vals(f); clearErrs(f);
+    const e = {};
+    if (d.mName.trim().length < 2) e.mName = 'Enter their name.';
+    const ph = V.phone(d.mPhone.trim()); if (ph) e.mPhone = ph;
+    if (!showErrs(f, e)) return;
+    S.team.push({id:'u' + uid(), name:d.mName.trim(), phone:d.mPhone.trim(), role:'staff', status:'invited'});
+    audit('Invited ' + d.mName.trim() + ' as staff');
+    ui.invite = false; save(); rerender(); toast('Invite sent to ' + d.mName.trim());
+  },
+  suspendForm(f){
+    const id = f.dataset.id, reason = new FormData(f).get('reason');
+    setSellerStatus(id, 'suspended', reason);
+    audit('Suspended the seller: ' + String(reason).toLowerCase(), id);
+    ui.confirmSeller = null; save(); rerender(); toast(sellerName(id) + ' suspended');
   }
 };
 
@@ -1316,9 +1669,11 @@ function onFieldInput(e){
     t.removeAttribute('aria-invalid');
     const er = document.getElementById(t.id + '-err'); if (er){ er.hidden = true; er.textContent = ''; }
   }
-  if (['cPhone','pPhone','uPhone'].includes(t.name)) digitsOnly(t, 10);
+  if (['cPhone','pPhone','uPhone','mPhone'].includes(t.name)) digitsOnly(t, 10);
   if (['pPin','toPin'].includes(t.name)) digitsOnly(t, 6);
   if (t.name === 'gstin'){ const up = t.value.toUpperCase(); if (up !== t.value) t.value = up; }
+  if (t.hasAttribute && t.hasAttribute('data-role-sel')){ if (e.type === 'change') setRole(t.value); return; }
+  if (t.id === 'sellerSearch'){ ui.sq = t.value; const w = $('#sellerRows'); if (w) w.innerHTML = sellerRows(); return; }
   if (t.id === 'shipSearch'){ ui.q = t.value; const [, a] = parts(); const w = $('#rowsWrap'); if (w) w.innerHTML = rowsHtml(a || null); return; }
   if (t.name === 'sort' && e.type === 'change'){ ui.sort = t.value; $('#results').innerHTML = resultsHtml(); const r = $('#r-sort-' + ui.sort); if (r) r.focus(); return; }
   const f = t.form; if (!f) return;
